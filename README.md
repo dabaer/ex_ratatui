@@ -209,8 +209,7 @@ end
 |---------|-----|-------------|
 | `hello_world.exs` | `mix run examples/hello_world.exs` | Minimal paragraph display |
 | `counter.exs` | `mix run examples/counter.exs` | Interactive counter with key events |
-| `list_navigation.exs` | `mix run examples/list_navigation.exs` | Navigable list with keyboard |
-| `dashboard.exs` | `mix run examples/dashboard.exs` | Full dashboard with all widgets |
+| `task_tracker.exs` | `mix run examples/task_tracker.exs` | Interactive task tracker with all widgets |
 
 ## License
 

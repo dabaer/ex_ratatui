@@ -30,3 +30,6 @@ ex_ratatui-*.tar
 
 # claude
 .claude/
+
+# mise
+mise.toml
