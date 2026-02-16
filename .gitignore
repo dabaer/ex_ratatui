@@ -21,3 +21,12 @@ ex_ratatui-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Rust binary artifacts
+/target/
+
+# Compiled NIF shared libraries
+/priv/native/
+
+# claude
+.claude/
