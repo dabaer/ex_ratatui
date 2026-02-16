@@ -8,7 +8,7 @@ defmodule ExRatatui do
   alias ExRatatui.Native
   alias ExRatatui.Layout.Rect
   alias ExRatatui.Style
-  alias ExRatatui.Widgets.Paragraph
+  alias ExRatatui.Widgets.{Block, Gauge, List, Paragraph, Table}
 
   @doc """
   Runs a TUI application.
@@ -104,7 +104,79 @@ defmodule ExRatatui do
       "scroll_y" => elem(p.scroll, 0),
       "scroll_x" => elem(p.scroll, 1)
     }
+    |> maybe_put_block(p.block)
   end
+
+  defp encode_widget(%Block{} = b) do
+    encode_block(b)
+    |> Map.put("type", "block")
+  end
+
+  defp encode_widget(%List{} = l) do
+    %{
+      "type" => "list",
+      "items" => l.items,
+      "style" => encode_style(l.style),
+      "highlight_style" => encode_style(l.highlight_style)
+    }
+    |> maybe_put("highlight_symbol", l.highlight_symbol)
+    |> maybe_put("selected", l.selected)
+    |> maybe_put_block(l.block)
+  end
+
+  defp encode_widget(%Table{} = t) do
+    %{
+      "type" => "table",
+      "rows" => t.rows,
+      "widths" => Enum.map(t.widths, &encode_constraint/1),
+      "style" => encode_style(t.style),
+      "highlight_style" => encode_style(t.highlight_style),
+      "column_spacing" => t.column_spacing
+    }
+    |> maybe_put("header", t.header)
+    |> maybe_put("highlight_symbol", t.highlight_symbol)
+    |> maybe_put("selected", t.selected)
+    |> maybe_put_block(t.block)
+  end
+
+  defp encode_widget(%Gauge{} = g) do
+    %{
+      "type" => "gauge",
+      "ratio" => g.ratio * 1.0,
+      "style" => encode_style(g.style),
+      "gauge_style" => encode_style(g.gauge_style)
+    }
+    |> maybe_put("label", g.label)
+    |> maybe_put_block(g.block)
+  end
+
+  defp encode_block(%Block{} = b) do
+    %{
+      "borders" => Enum.map(b.borders, &Atom.to_string/1),
+      "border_style" => encode_style(b.border_style),
+      "border_type" => Atom.to_string(b.border_type),
+      "style" => encode_style(b.style),
+      "padding_left" => elem(b.padding, 0),
+      "padding_right" => elem(b.padding, 1),
+      "padding_top" => elem(b.padding, 2),
+      "padding_bottom" => elem(b.padding, 3)
+    }
+    |> maybe_put("title", b.title)
+  end
+
+  defp maybe_put(map, _key, nil), do: map
+  defp maybe_put(map, key, value), do: Map.put(map, key, value)
+
+  defp maybe_put_block(map, nil), do: map
+  defp maybe_put_block(map, %Block{} = b), do: Map.put(map, "block", encode_block(b))
+
+  defp encode_constraint({:percentage, n}), do: %{"type" => "percentage", "value" => n}
+  defp encode_constraint({:length, n}), do: %{"type" => "length", "value" => n}
+  defp encode_constraint({:min, n}), do: %{"type" => "min", "value" => n}
+  defp encode_constraint({:max, n}), do: %{"type" => "max", "value" => n}
+
+  defp encode_constraint({:ratio, num, den}),
+    do: %{"type" => "ratio", "num" => num, "den" => den}
 
   defp encode_style(%Style{} = s) do
     style = %{"modifiers" => Enum.map(s.modifiers, &Atom.to_string/1)}

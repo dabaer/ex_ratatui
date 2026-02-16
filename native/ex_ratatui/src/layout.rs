@@ -35,7 +35,7 @@ fn layout_split(
     Ok(chunks.iter().map(|r| (r.x, r.y, r.width, r.height)).collect())
 }
 
-fn decode_constraint(term: Term) -> Result<Constraint, Error> {
+pub fn decode_constraint(term: Term) -> Result<Constraint, Error> {
     let map: HashMap<String, Term> = term.decode()?;
     let constraint_type: String = map
         .get("type")

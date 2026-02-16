@@ -3,12 +3,15 @@ use ratatui::style::Style;
 use ratatui::widgets::{Paragraph, Wrap};
 use ratatui::Frame;
 
+use crate::widgets::block::BlockData;
+
 pub struct ParagraphData {
     pub text: String,
     pub style: Style,
     pub alignment: Alignment,
     pub wrap: bool,
     pub scroll: (u16, u16),
+    pub block: Option<BlockData>,
 }
 
 pub fn render(frame: &mut Frame, data: &ParagraphData, area: Rect) {
@@ -22,6 +25,10 @@ pub fn render(frame: &mut Frame, data: &ParagraphData, area: Rect) {
 
     if data.scroll != (0, 0) {
         widget = widget.scroll(data.scroll);
+    }
+
+    if let Some(ref block_data) = data.block {
+        widget = widget.block(block_data.to_block());
     }
 
     frame.render_widget(widget, area);
@@ -54,6 +61,7 @@ mod tests {
             alignment: Alignment::Left,
             wrap: false,
             scroll: (0, 0),
+            block: None,
         };
 
         terminal
@@ -77,6 +85,7 @@ mod tests {
             alignment: Alignment::Left,
             wrap: false,
             scroll: (0, 0),
+            block: None,
         };
 
         terminal
@@ -101,6 +110,7 @@ mod tests {
             alignment: Alignment::Center,
             wrap: false,
             scroll: (0, 0),
+            block: None,
         };
 
         terminal
@@ -126,6 +136,7 @@ mod tests {
             alignment: Alignment::Left,
             wrap: true,
             scroll: (0, 0),
+            block: None,
         };
 
         terminal
@@ -151,6 +162,7 @@ mod tests {
             alignment: Alignment::Left,
             wrap: false,
             scroll: (0, 0),
+            block: None,
         };
 
         terminal
@@ -173,6 +185,7 @@ mod tests {
             alignment: Alignment::Left,
             wrap: false,
             scroll: (0, 0),
+            block: None,
         };
 
         // Render at x=5, y=2
