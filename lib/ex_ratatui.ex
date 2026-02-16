@@ -18,12 +18,17 @@ defmodule ExRatatui do
   """
   def run(opts \\ [], fun) when is_function(fun, 0) do
     _viewport = Keyword.get(opts, :viewport, :fullscreen)
-    Native.init_terminal()
 
-    try do
-      fun.()
-    after
-      Native.restore_terminal()
+    case Native.init_terminal() do
+      :ok ->
+        try do
+          fun.()
+        after
+          Native.restore_terminal()
+        end
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -48,8 +53,13 @@ defmodule ExRatatui do
 
   @doc """
   Returns the current terminal size as `{width, height}`.
+
+  Returns `{:error, reason}` if the terminal size cannot be determined.
   """
   def terminal_size do
-    Native.terminal_size()
+    case Native.terminal_size() do
+      {w, h} when is_integer(w) and is_integer(h) -> {w, h}
+      {:error, _} = err -> err
+    end
   end
 end
