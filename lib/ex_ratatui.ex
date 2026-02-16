@@ -88,6 +88,30 @@ defmodule ExRatatui do
     end
   end
 
+  @doc """
+  Initializes a headless test terminal with the given dimensions.
+
+  Uses ratatui's TestBackend — no real terminal needed. Useful for testing
+  rendering output without a TTY.
+
+      :ok = ExRatatui.init_test_terminal(80, 24)
+      ExRatatui.draw([{widget, rect}])
+      content = ExRatatui.get_buffer_content()
+  """
+  def init_test_terminal(width, height) do
+    Native.init_test_terminal(width, height)
+  end
+
+  @doc """
+  Returns the test terminal's buffer contents as a string.
+
+  Each line is trimmed of trailing whitespace and joined with newlines.
+  Only works after `init_test_terminal/2`.
+  """
+  def get_buffer_content do
+    Native.get_buffer_content()
+  end
+
   # -- Encoding: Elixir structs → string-keyed maps for NIF --
 
   defp encode_command({widget, %Rect{} = rect}) do

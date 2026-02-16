@@ -4,18 +4,12 @@ use std::collections::HashMap;
 
 use crate::layout::decode_constraint;
 use crate::style::decode_style;
-use crate::terminal::with_terminal;
+use crate::terminal::with_terminal_draw;
 use crate::widgets::block::{self, BlockData};
 use crate::widgets::gauge::{self, GaugeData};
 use crate::widgets::list::{self, ListData};
 use crate::widgets::paragraph::{self, ParagraphData};
 use crate::widgets::table::{self, TableData};
-
-mod atoms {
-    rustler::atoms! {
-        ok,
-    }
-}
 
 enum WidgetData {
     Paragraph(ParagraphData),
@@ -35,16 +29,10 @@ fn draw_frame(commands: Term) -> Result<Atom, Error> {
     let command_list: Vec<(Term, Term)> = commands.decode()?;
     let render_commands = decode_commands(&command_list)?;
 
-    with_terminal(|terminal| {
-        terminal
-            .draw(|frame| {
-                for cmd in &render_commands {
-                    render_widget(frame, cmd);
-                }
-            })
-            .map_err(|e| Error::Term(Box::new(format!("{e}"))))?;
-
-        Ok(atoms::ok())
+    with_terminal_draw(|frame| {
+        for cmd in &render_commands {
+            render_widget(frame, cmd);
+        }
     })
 }
 
