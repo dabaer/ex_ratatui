@@ -21,7 +21,6 @@ defmodule ExRatatui.MixProject do
   defp docs do
     [
       main: "ExRatatui",
-      extras: ["NEXT_STEPS.md"],
       groups_for_modules: [
         Widgets: [
           ExRatatui.Widgets.Paragraph,
