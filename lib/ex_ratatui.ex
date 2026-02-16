@@ -6,6 +6,9 @@ defmodule ExRatatui do
   """
 
   alias ExRatatui.Native
+  alias ExRatatui.Layout.Rect
+  alias ExRatatui.Style
+  alias ExRatatui.Widgets.Paragraph
 
   @doc """
   Runs a TUI application.
@@ -34,9 +37,16 @@ defmodule ExRatatui do
 
   @doc """
   Draws a list of `{widget, rect}` tuples to the terminal in a single frame.
+
+  Returns `:ok` on success or `{:error, reason}` on failure.
+
+      ExRatatui.draw([
+        {%ExRatatui.Widgets.Paragraph{text: "Hello!"}, rect}
+      ])
   """
   def draw(widgets) when is_list(widgets) do
-    Native.draw_frame(widgets)
+    commands = Enum.map(widgets, &encode_command/1)
+    Native.draw_frame(commands)
   end
 
   @doc """
@@ -61,5 +71,37 @@ defmodule ExRatatui do
       {w, h} when is_integer(w) and is_integer(h) -> {w, h}
       {:error, _} = err -> err
     end
+  end
+
+  # -- Encoding: Elixir structs → string-keyed maps for NIF --
+
+  defp encode_command({widget, %Rect{} = rect}) do
+    {encode_widget(widget), encode_rect(rect)}
+  end
+
+  defp encode_widget(%Paragraph{} = p) do
+    %{
+      "type" => "paragraph",
+      "text" => p.text,
+      "style" => encode_style(p.style),
+      "alignment" => Atom.to_string(p.alignment),
+      "wrap" => p.wrap,
+      "scroll_y" => elem(p.scroll, 0),
+      "scroll_x" => elem(p.scroll, 1)
+    }
+  end
+
+  defp encode_style(%Style{} = s) do
+    style = %{"modifiers" => Enum.map(s.modifiers, &Atom.to_string/1)}
+    style = if s.fg, do: Map.put(style, "fg", encode_color(s.fg)), else: style
+    if s.bg, do: Map.put(style, "bg", encode_color(s.bg)), else: style
+  end
+
+  defp encode_color(atom) when is_atom(atom), do: Atom.to_string(atom)
+  defp encode_color({:rgb, r, g, b}), do: %{"type" => "rgb", "r" => r, "g" => g, "b" => b}
+  defp encode_color({:indexed, i}), do: %{"type" => "indexed", "value" => i}
+
+  defp encode_rect(%Rect{} = r) do
+    %{"x" => r.x, "y" => r.y, "width" => r.width, "height" => r.height}
   end
 end
