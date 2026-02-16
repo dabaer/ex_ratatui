@@ -52,12 +52,27 @@ defmodule ExRatatui do
   @doc """
   Polls for terminal events with a timeout (default 250ms).
 
-  Returns an event struct or `nil` if no event within the timeout.
+  Returns an `Event.Key`, `Event.Mouse`, `Event.Resize` struct, or `nil`
+  if no event within the timeout.
   """
   def poll_event(timeout_ms \\ 250) do
+    alias ExRatatui.Event
+
     case Native.poll_event(timeout_ms) do
-      nil -> nil
-      raw -> ExRatatui.Event.from_raw(raw)
+      nil ->
+        nil
+
+      {:key, code, modifiers, kind} ->
+        %Event.Key{code: code, modifiers: modifiers, kind: kind}
+
+      {:mouse, kind, button, x, y, modifiers} ->
+        %Event.Mouse{kind: kind, button: button, x: x, y: y, modifiers: modifiers}
+
+      {:resize, width, height} ->
+        %Event.Resize{width: width, height: height}
+
+      {:error, _} = err ->
+        err
     end
   end
 
