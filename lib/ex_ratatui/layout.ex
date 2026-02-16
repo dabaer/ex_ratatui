@@ -1,10 +1,45 @@
 defmodule ExRatatui.Layout do
   @moduledoc """
   Layout system for splitting areas into sub-regions.
+
+  Uses ratatui's constraint-based layout engine to divide a `Rect` into
+  multiple sub-regions along a direction.
+
+  ## Constraints
+
+    * `{:percentage, n}` - percentage of the total space
+    * `{:length, n}` - exact number of cells
+    * `{:min, n}` - minimum number of cells
+    * `{:max, n}` - maximum number of cells
+    * `{:ratio, numerator, denominator}` - fractional ratio
+
+  ## Example
+
+      area = %Rect{x: 0, y: 0, width: 80, height: 24}
+
+      [header, body, footer] = Layout.split(area, :vertical, [
+        {:length, 3},
+        {:min, 0},
+        {:length, 1}
+      ])
+
+      [sidebar, main] = Layout.split(body, :horizontal, [
+        {:percentage, 30},
+        {:percentage, 70}
+      ])
   """
 
   defmodule Rect do
-    @moduledoc "A rectangular area on the terminal screen."
+    @moduledoc """
+    A rectangular area on the terminal screen.
+
+    ## Fields
+
+      * `:x` - left column (0-based)
+      * `:y` - top row (0-based)
+      * `:width` - width in cells
+      * `:height` - height in cells
+    """
     defstruct x: 0, y: 0, width: 0, height: 0
   end
 
