@@ -26,14 +26,21 @@ defmodule ExRatatui.Layout do
   """
   def split(%Rect{} = area, direction, constraints)
       when direction in [:horizontal, :vertical] and is_list(constraints) do
-    ExRatatui.Native.layout_split(
-      Map.from_struct(area),
-      Atom.to_string(direction),
-      Enum.map(constraints, &encode_constraint/1)
-    )
-    |> Enum.map(fn rect_map ->
-      struct!(Rect, Enum.map(rect_map, fn {k, v} -> {String.to_existing_atom(k), v} end))
-    end)
+    rect_map = %{"x" => area.x, "y" => area.y, "width" => area.width, "height" => area.height}
+
+    case ExRatatui.Native.layout_split(
+           rect_map,
+           Atom.to_string(direction),
+           Enum.map(constraints, &encode_constraint/1)
+         ) do
+      rects when is_list(rects) ->
+        Enum.map(rects, fn {x, y, width, height} ->
+          %Rect{x: x, y: y, width: width, height: height}
+        end)
+
+      {:error, _} = err ->
+        err
+    end
   end
 
   defp encode_constraint({:percentage, n}), do: %{"type" => "percentage", "value" => n}
