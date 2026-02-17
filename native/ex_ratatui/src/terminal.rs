@@ -37,7 +37,7 @@ where
 
     let draw_result = match terminal {
         AnyTerminal::Crossterm(t) => t.draw(f),
-        AnyTerminal::Test(t) => t.draw(f),
+        AnyTerminal::Test(t) => t.draw(f).map_err(|e| std::io::Error::other(e)),
     };
 
     draw_result.map_err(|e| Error::Term(Box::new(format!("{e}"))))?;
