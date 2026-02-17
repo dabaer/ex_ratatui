@@ -1,31 +1,29 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
+  push:
     branches: [main]
 
 jobs:
-  test:
-    name: OTP ${{ matrix.otp }} / Elixir ${{ matrix.elixir }}
+  main:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        otp: ["26", "27", "28"]
-        elixir: ["1.17", "1.18", "1.19"]
-        exclude:
-          # Elixir 1.17 does not support OTP 28
-          - otp: "28"
-            elixir: "1.17"
-          # Elixir 1.19 requires OTP 27+
-          - otp: "26"
-            elixir: "1.19"
+        include:
+          - elixir: "1.19"
+            otp: "28"
+            lint: true
+          - elixir: "1.18"
+            otp: "27"
+          - elixir: "1.17"
+            otp: "26"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - uses: erlef/setup-beam@v1
         with:
@@ -34,22 +32,15 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
-      - name: Cache mix deps
-        uses: actions/cache@v5
+      - uses: actions/cache@v4
+        if: ${{ ! matrix.lint }}
         with:
-          path: deps
-          key: deps-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
-          restore-keys: deps-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-
+          path: |
+            _build
+            deps
+          key: ${{ runner.os }}-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('mix.lock') }}
 
-      - name: Cache build
-        uses: actions/cache@v5
-        with:
-          path: _build
-          key: build-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
-          restore-keys: build-${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-
-
-      - name: Cache cargo
-        uses: actions/cache@v5
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.cargo/registry
@@ -58,7 +49,13 @@ jobs:
           key: cargo-${{ runner.os }}-${{ hashFiles('native/ex_ratatui/Cargo.lock', 'Cargo.lock') }}
           restore-keys: cargo-${{ runner.os }}-
 
-      - run: mix deps.get
+      - run: mix deps.get --check-locked
+
+      - run: mix deps.unlock --check-unused
+        if: ${{ matrix.lint }}
+
+      - run: mix format --check-formatted
+        if: ${{ matrix.lint }}
 
       - run: mix compile --warnings-as-errors
 
@@ -66,5 +63,3 @@ jobs:
         run: cargo test --manifest-path native/ex_ratatui/Cargo.toml
 
       - run: mix test
-
-      - run: mix format --check-formatted
