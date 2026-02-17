@@ -6,8 +6,15 @@ Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, 
 
 ## Prerequisites
 
-- Elixir 1.18+
-- Rust toolchain (for compiling the NIF)
+- Elixir 1.17+
+
+Precompiled NIF binaries are available for Linux, macOS, and Windows (x86_64 and aarch64). No Rust toolchain needed.
+
+To compile from source instead, install the [Rust toolchain](https://rustup.rs/) and set:
+
+```sh
+export EX_RATATUI_BUILD=true
+```
 
 ## Installation
 
@@ -21,7 +28,23 @@ def deps do
 end
 ```
 
-Then run `mix deps.get && mix compile` — Rustler will compile the native code automatically.
+Then run `mix deps.get && mix compile` — a precompiled NIF binary for your platform will be downloaded automatically.
+
+## How It Works
+
+ExRatatui bridges Elixir and Rust through [Rustler](https://github.com/rustler-beam/rustler) NIFs (Native Implemented Functions):
+
+```
+Elixir structs → encode to maps → Rust NIF → decode to ratatui types → render to terminal
+Terminal events → Rust NIF (DirtyIo) → encode to tuples → Elixir Event structs
+```
+
+- **Rendering:** Elixir widget structs are encoded as string-keyed maps, passed across the NIF boundary, and decoded into ratatui widget types for rendering.
+- **Events:** The `poll_event` NIF runs on BEAM's DirtyIo scheduler, so event polling never blocks normal Elixir processes.
+- **Terminal state:** Managed in Rust via a global mutex supporting two backends — a real crossterm terminal and a headless test backend for CI.
+- **Layout:** Ratatui's constraint-based layout engine is exposed directly, computing split rectangles on the Rust side and returning them as Elixir tuples.
+
+Precompiled binaries are provided via [rustler_precompiled](https://github.com/philss/rustler_precompiled) so users don't need the Rust toolchain.
 
 ## Quick Start
 

@@ -9,6 +9,8 @@ jobs:
   main:
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    env:
+      EX_RATATUI_BUILD: "true"
 
     strategy:
       fail-fast: false

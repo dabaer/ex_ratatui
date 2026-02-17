@@ -28,7 +28,8 @@ defmodule ExRatatui.MixProject do
 
   defp deps do
     [
-      {:rustler, "~> 0.36", runtime: false},
+      {:rustler, ">= 0.0.0", optional: true},
+      {:rustler_precompiled, "~> 0.8"},
       {:ex_doc, "~> 0.35", only: :dev, runtime: false}
     ]
   end
@@ -40,7 +41,19 @@ defmodule ExRatatui.MixProject do
         "GitHub" => @source_url,
         "Changelog" => @source_url <> "/blob/main/CHANGELOG.md"
       },
-      files: ~w(lib native priv .formatter.exs mix.exs README.md LICENSE CHANGELOG.md)
+      files: ~w(
+        lib
+        native/ex_ratatui/.cargo
+        native/ex_ratatui/src
+        native/ex_ratatui/Cargo*
+        checksum-*.exs
+        priv
+        .formatter.exs
+        mix.exs
+        README.md
+        LICENSE
+        CHANGELOG.md
+      )
     ]
   end
 
