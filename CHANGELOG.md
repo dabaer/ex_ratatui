@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **OTP App behaviour:** `ExRatatui.App` with LiveView-inspired callbacks (`mount/1`, `render/2`, `handle_event/2`, `handle_info/2`) for building supervised TUI applications
+- **GenServer runtime:** `ExRatatui.Server` manages terminal lifecycle, self-scheduling event polling, and callback dispatch under OTP supervision
+- **Frame struct:** `ExRatatui.Frame` carries terminal dimensions to `render/2` callbacks
+- **Example app:** `examples/task_manager/` — a standalone Ecto + SQLite task manager demonstrating the App behaviour with full CRUD, filtering, and status toggling
+- **Example script:** `examples/counter_app.exs` — minimal App-based counter
+
 ## [0.1.0] - 2025-02-18
 
 ### Added

@@ -20,6 +20,7 @@ Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, 
 - 5 built-in widgets: Paragraph, Block, List, Table, Gauge
 - Constraint-based layout engine (percentage, length, min, max, ratio)
 - Non-blocking keyboard, mouse, and resize event polling
+- **OTP-supervised TUI apps** via `ExRatatui.App` behaviour with LiveView-inspired callbacks
 - Full color support: named, RGB, and 256-color indexed
 - Text modifiers: bold, italic, underlined, and more
 - Headless test backend for CI-friendly rendering verification
@@ -32,7 +33,9 @@ Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, 
 |---------|-----|-------------|
 | `hello_world.exs` | `mix run examples/hello_world.exs` | Minimal paragraph display |
 | `counter.exs` | `mix run examples/counter.exs` | Interactive counter with key events |
+| `counter_app.exs` | `mix run examples/counter_app.exs` | Counter using `ExRatatui.App` behaviour |
 | `task_tracker.exs` | `mix run examples/task_tracker.exs` | Full task tracker with all widgets |
+| `task_manager/` | See [README](examples/task_manager/README.md) | Supervised Ecto + SQLite CRUD app |
 
 ## Installation
 
@@ -90,6 +93,62 @@ end)
 ```
 
 Run it with `mix run examples/hello_world.exs`.
+
+## OTP App Behaviour
+
+For supervised TUI applications, use the `ExRatatui.App` behaviour — a LiveView-inspired callback interface that manages the terminal lifecycle under OTP:
+
+```elixir
+defmodule MyApp.TUI do
+  use ExRatatui.App
+
+  @impl true
+  def mount(_opts) do
+    {:ok, %{count: 0}}
+  end
+
+  @impl true
+  def render(state, frame) do
+    alias ExRatatui.Widgets.Paragraph
+    alias ExRatatui.Layout.Rect
+
+    widget = %Paragraph{text: "Count: #{state.count}"}
+    rect = %Rect{x: 0, y: 0, width: frame.width, height: frame.height}
+    [{widget, rect}]
+  end
+
+  @impl true
+  def handle_event(%ExRatatui.Event.Key{code: "q"}, state) do
+    {:stop, state}
+  end
+
+  def handle_event(%ExRatatui.Event.Key{code: "up"}, state) do
+    {:noreply, %{state | count: state.count + 1}}
+  end
+
+  def handle_event(_event, state) do
+    {:noreply, state}
+  end
+end
+```
+
+Add it to your supervision tree:
+
+```elixir
+children = [{MyApp.TUI, []}]
+Supervisor.start_link(children, strategy: :one_for_one)
+```
+
+### Callbacks
+
+| Callback | Description |
+|----------|-------------|
+| `mount/1` | Called once on startup. Return `{:ok, initial_state}` |
+| `render/2` | Called after every state change. Receives state and `%Frame{}` with terminal dimensions. Return `[{widget, rect}]` |
+| `handle_event/2` | Called on terminal events. Return `{:noreply, state}` or `{:stop, state}` |
+| `handle_info/2` | Called for non-terminal messages (e.g., PubSub). Optional — defaults to `{:noreply, state}` |
+
+See the [task_manager example](examples/task_manager/) for a full Ecto-backed app using this behaviour.
 
 ## How It Works
 
