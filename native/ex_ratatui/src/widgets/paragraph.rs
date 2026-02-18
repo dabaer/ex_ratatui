@@ -37,18 +37,10 @@ pub fn render(frame: &mut Frame, data: &ParagraphData, area: Rect) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::test_utils::helpers::buffer_line;
     use ratatui::backend::TestBackend;
     use ratatui::style::{Color, Modifier};
     use ratatui::Terminal;
-
-    fn buffer_line(terminal: &Terminal<TestBackend>, y: u16, width: u16) -> String {
-        let buf = terminal.backend().buffer();
-        (0..width)
-            .map(|x| buf.cell((x, y)).map_or(" ", |c| c.symbol()).to_string())
-            .collect::<String>()
-            .trim_end()
-            .to_string()
-    }
 
     #[test]
     fn test_render_plain_text() {

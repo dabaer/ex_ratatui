@@ -3,7 +3,7 @@ defmodule ExRatatui.MixProject do
 
   @description "Elixir bindings for the Rust ratatui terminal UI library"
   @source_url "https://github.com/mcass19/ex_ratatui"
-  @changelog_url @source_url <> "/blob/-/CHANGELOG.md"
+  @changelog_url @source_url <> "/blob/main/CHANGELOG.md"
   @version "0.1.0"
 
   def project do
@@ -45,7 +45,11 @@ defmodule ExRatatui.MixProject do
       links: %{
         "GitHub" => @source_url,
         "Changelog" => @changelog_url
-      }
+      },
+      files: ~w(
+        lib native .formatter.exs mix.exs README.md LICENSE CHANGELOG.md
+        checksum-Elixir.ExRatatui.Native.exs
+      )
     ]
   end
 

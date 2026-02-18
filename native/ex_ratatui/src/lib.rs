@@ -3,7 +3,7 @@ mod layout;
 mod rendering;
 mod style;
 mod terminal;
-mod text;
+mod test_utils;
 mod widgets;
 
 rustler::init!("Elixir.ExRatatui.Native");

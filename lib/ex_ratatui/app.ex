@@ -67,7 +67,7 @@ defmodule ExRatatui.App do
   @callback handle_info(msg :: term(), state()) :: {:noreply, state()} | {:stop, state()}
   @callback terminate(reason :: term(), state()) :: term()
 
-  @optional_callbacks [terminate: 2]
+  @optional_callbacks [handle_info: 2, terminate: 2]
 
   defmacro __using__(_opts) do
     quote do

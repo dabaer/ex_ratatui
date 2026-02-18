@@ -32,7 +32,7 @@ defmodule ExRatatui.TerminalTest do
     end
   end
 
-  describe "run/2" do
+  describe "run/1" do
     test "either executes the function (TTY) or returns error (no TTY)" do
       result = ExRatatui.run(fn -> :ran end)
 
@@ -98,7 +98,7 @@ defmodule ExRatatui.TerminalTest do
       end
     end
 
-    test "full ExRatatui.run/2 lifecycle" do
+    test "full ExRatatui.run/1 lifecycle" do
       ran? =
         case ExRatatui.run(fn -> :ran end) do
           :ran -> true
@@ -106,7 +106,7 @@ defmodule ExRatatui.TerminalTest do
         end
 
       if ran? do
-        # Terminal should have been restored by run/2
+        # Terminal should have been restored by run/1
         assert :ok = Native.restore_terminal()
       end
     end

@@ -9,12 +9,6 @@ Elixir bindings for the Rust [ratatui](https://ratatui.rs) terminal UI library, 
 
 Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, and styling system — without blocking the BEAM.
 
-<!-- TODO: Replace with a GIF/video recording of the task_tracker example -->
-<!-- Record with: asciinema rec demo.cast && agg demo.cast assets/demo.gif -->
-<p align="center">
-  <img src="assets/demo.gif" alt="ExRatatui Task Tracker demo" width="700">
-</p>
-
 ## Features
 
 - 5 built-in widgets: Paragraph, Block, List, Table, Gauge
@@ -321,12 +315,17 @@ test "renders a paragraph" do
 end
 ```
 
-## Contributing
+## Development
 
-Contributions of all kinds are welcome! Whether it's bug reports, feature requests, documentation improvements, or code — every contribution helps.
+```sh
+git clone https://github.com/mcass19/ex_ratatui.git
+cd ex_ratatui
+mix deps.get
+mix test
+```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+To compile the NIF from source, install the [Rust toolchain](https://rustup.rs/) and set `EX_RATATUI_BUILD=true`.
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE) for details.

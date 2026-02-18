@@ -1,5 +1,5 @@
 defmodule ExRatatui.EventTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   describe "poll_event/1" do
     test "returns nil (timeout) or {:error, _} (no TTY)" do

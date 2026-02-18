@@ -1,5 +1,5 @@
 # Example: interactive task tracker using all widgets — Paragraph, Block, List, Table, Gauge.
-# Run with: mix run examples/task_tracker.exs
+# Run with: mix run examples/task_manager.exs
 #
 # Each team member has their own task board. Navigate between members
 # to see and manage their individual tasks.

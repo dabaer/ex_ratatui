@@ -40,6 +40,14 @@ defmodule ExRatatui.Layout do
       * `:width` - width in cells
       * `:height` - height in cells
     """
+
+    @type t :: %__MODULE__{
+            x: non_neg_integer(),
+            y: non_neg_integer(),
+            width: non_neg_integer(),
+            height: non_neg_integer()
+          }
+
     defstruct x: 0, y: 0, width: 0, height: 0
   end
 
@@ -78,9 +86,10 @@ defmodule ExRatatui.Layout do
     end
   end
 
-  defp encode_constraint({:percentage, n}), do: %{"type" => "percentage", "value" => n}
-  defp encode_constraint({:length, n}), do: %{"type" => "length", "value" => n}
-  defp encode_constraint({:min, n}), do: %{"type" => "min", "value" => n}
-  defp encode_constraint({:max, n}), do: %{"type" => "max", "value" => n}
-  defp encode_constraint({:ratio, num, den}), do: %{"type" => "ratio", "num" => num, "den" => den}
+  @doc false
+  def encode_constraint({:percentage, n}), do: %{"type" => "percentage", "value" => n}
+  def encode_constraint({:length, n}), do: %{"type" => "length", "value" => n}
+  def encode_constraint({:min, n}), do: %{"type" => "min", "value" => n}
+  def encode_constraint({:max, n}), do: %{"type" => "max", "value" => n}
+  def encode_constraint({:ratio, num, den}), do: %{"type" => "ratio", "num" => num, "den" => den}
 end

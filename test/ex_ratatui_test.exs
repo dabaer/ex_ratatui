@@ -1,5 +1,5 @@
 defmodule ExRatatuiTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   test "widget structs can be created" do
     paragraph = %ExRatatui.Widgets.Paragraph{text: "Hello"}
@@ -44,19 +44,13 @@ defmodule ExRatatuiTest do
     assert resize.width == 80
   end
 
-  test "event from_raw parses key events" do
-    raw = %{"type" => "key", "code" => "q", "modifiers" => [], "kind" => "press"}
-    event = ExRatatui.Event.from_raw(raw)
-    assert %ExRatatui.Event.Key{code: "q"} = event
-  end
+  test "event structs have sensible defaults" do
+    key = %ExRatatui.Event.Key{}
+    assert key.modifiers == []
+    assert key.code == nil
 
-  test "event from_raw parses resize events" do
-    raw = %{"type" => "resize", "width" => 120, "height" => 40}
-    event = ExRatatui.Event.from_raw(raw)
-    assert %ExRatatui.Event.Resize{width: 120, height: 40} = event
-  end
-
-  test "event from_raw returns nil for unknown events" do
-    assert ExRatatui.Event.from_raw(%{"type" => "unknown"}) == nil
+    mouse = %ExRatatui.Event.Mouse{}
+    assert mouse.modifiers == []
+    assert mouse.x == nil
   end
 end

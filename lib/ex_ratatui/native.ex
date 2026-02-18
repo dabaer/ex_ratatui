@@ -23,20 +23,44 @@ defmodule ExRatatui.Native do
     nif_versions: ["2.16", "2.17"]
 
   # Terminal lifecycle
+
+  @doc false
+  # Enters raw mode, alternate screen, and creates a crossterm-backed terminal.
   def init_terminal, do: :erlang.nif_error(:not_loaded)
+
+  @doc false
+  # Leaves alternate screen and disables raw mode. Safe to call multiple times.
   def restore_terminal, do: :erlang.nif_error(:not_loaded)
+
+  @doc false
+  # Returns `{width, height}` of the current terminal.
   def terminal_size, do: :erlang.nif_error(:not_loaded)
 
   # Rendering
+
+  @doc false
+  # Draws a list of `{widget_map, rect_map}` tuples in a single frame.
   def draw_frame(_commands), do: :erlang.nif_error(:not_loaded)
 
   # Events
+
+  @doc false
+  # Polls for a terminal event with timeout (ms). Runs on DirtyIo scheduler.
   def poll_event(_timeout_ms), do: :erlang.nif_error(:not_loaded)
 
   # Layout
+
+  @doc false
+  # Splits a rect into sub-rects given a direction and constraints.
   def layout_split(_area, _direction, _constraints), do: :erlang.nif_error(:not_loaded)
 
   # Test backend
+
+  @doc false
+  # Creates a headless test terminal with given dimensions.
   def init_test_terminal(_width, _height), do: :erlang.nif_error(:not_loaded)
+
+  @doc false
+  # Returns the test terminal's buffer contents as a string.
   def get_buffer_content, do: :erlang.nif_error(:not_loaded)
 end

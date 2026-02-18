@@ -7,15 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- **OTP App behaviour:** `ExRatatui.App` with LiveView-inspired callbacks (`mount/1`, `render/2`, `handle_event/2`, `handle_info/2`) for building supervised TUI applications
-- **GenServer runtime:** `ExRatatui.Server` manages terminal lifecycle, self-scheduling event polling, and callback dispatch under OTP supervision
-- **Frame struct:** `ExRatatui.Frame` carries terminal dimensions to `render/2` callbacks
-- **Example app:** `examples/task_manager/` — a standalone Ecto + SQLite task manager demonstrating the App behaviour with full CRUD, filtering, and status toggling
-- **Example script:** `examples/counter_app.exs` — minimal App-based counter
-
-## [0.1.0] - 2025-02-18
+## [0.1.0] - 2026-02-19
 
 ### Added
 
@@ -24,9 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Event polling:** Non-blocking keyboard, mouse, and resize event handling on BEAM's DirtyIo scheduler
 - **Styling system:** Named colors, RGB (`{:rgb, r, g, b}`), 256-color indexed (`{:indexed, n}`), and text modifiers (bold, italic, underlined, dim, crossed out, etc.)
 - **Terminal lifecycle:** `ExRatatui.run/1` for automatic terminal init and cleanup
+- **OTP App behaviour:** `ExRatatui.App` with LiveView-inspired callbacks (`mount/1`, `render/2`, `handle_event/2`, `handle_info/2`) for building supervised TUI applications
+- **GenServer runtime:** `ExRatatui.Server` manages terminal lifecycle, self-scheduling event polling, and callback dispatch under OTP supervision
+- **Frame struct:** `ExRatatui.Frame` carries terminal dimensions to `render/2` callbacks
 - **Test backend:** Headless `TestBackend` via `init_test_terminal/2` and `get_buffer_content/0` for CI-friendly rendering verification
 - **Precompiled NIFs:** Via `rustler_precompiled` for Linux, macOS, and Windows (x86_64 and aarch64) — no Rust toolchain required
-- **Examples:** `hello_world.exs` (minimal display), `counter.exs` (interactive key events), `task_manager.exs` (full app with all widgets)
+- **Examples:** `hello_world.exs` (minimal display), `counter.exs` (interactive key events), `counter_app.exs` (App-based counter), `task_manager.exs` (full app with all widgets), and `examples/task_manager/` (supervised Ecto + SQLite CRUD app)
 
 [Unreleased]: https://github.com/mcass19/ex_ratatui/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/mcass19/ex_ratatui/releases/tag/v0.1.0
