@@ -1,10 +1,60 @@
 # ExRatatui
 
+[![Hex.pm](https://img.shields.io/hexpm/v/ex_ratatui.svg)](https://hex.pm/packages/ex_ratatui)
+[![Docs](https://img.shields.io/badge/hex-docs-blue)](https://hexdocs.pm/ex_ratatui)
+[![CI](https://github.com/mcass19/ex_ratatui/actions/workflows/ci.yml/badge.svg)](https://github.com/mcass19/ex_ratatui/actions/workflows/ci.yml)
+[![License](https://img.shields.io/hexpm/l/ex_ratatui.svg)](https://github.com/mcass19/ex_ratatui/blob/main/LICENSE)
+
 Elixir bindings for the Rust [ratatui](https://ratatui.rs) terminal UI library, via [Rustler](https://github.com/rustler-beam/rustler) NIFs.
 
 Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, and styling system — without blocking the BEAM.
 
-## Prerequisites
+<!-- TODO: Replace with a GIF/video recording of the task_tracker example -->
+<!-- Record with: asciinema rec demo.cast && agg demo.cast assets/demo.gif -->
+<p align="center">
+  <img src="assets/demo.gif" alt="ExRatatui Task Tracker demo" width="700">
+</p>
+
+## Features
+
+- 5 built-in widgets: Paragraph, Block, List, Table, Gauge
+- Constraint-based layout engine (percentage, length, min, max, ratio)
+- Non-blocking keyboard, mouse, and resize event polling
+- Full color support: named, RGB, and 256-color indexed
+- Text modifiers: bold, italic, underlined, and more
+- Headless test backend for CI-friendly rendering verification
+- Precompiled NIF binaries — no Rust toolchain needed
+- Runs on BEAM's DirtyIo scheduler — never blocks your processes
+
+## Examples
+
+| Example | Run | Description |
+|---------|-----|-------------|
+| `hello_world.exs` | `mix run examples/hello_world.exs` | Minimal paragraph display |
+| `counter.exs` | `mix run examples/counter.exs` | Interactive counter with key events |
+| `task_tracker.exs` | `mix run examples/task_tracker.exs` | Full task tracker with all widgets |
+
+## Installation
+
+Add `ex_ratatui` to your dependencies in `mix.exs`:
+
+```elixir
+def deps do
+  [
+    {:ex_ratatui, "~> 0.1"}
+  ]
+end
+```
+
+Then fetch and compile:
+
+```sh
+mix deps.get && mix compile
+```
+
+A precompiled NIF binary for your platform will be downloaded automatically.
+
+### Prerequisites
 
 - Elixir 1.17+
 
@@ -15,36 +65,6 @@ To compile from source instead, install the [Rust toolchain](https://rustup.rs/)
 ```sh
 export EX_RATATUI_BUILD=true
 ```
-
-## Installation
-
-Add `ex_ratatui` to your dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:ex_ratatui, "~> 0.1.0"}
-  ]
-end
-```
-
-Then run `mix deps.get && mix compile` — a precompiled NIF binary for your platform will be downloaded automatically.
-
-## How It Works
-
-ExRatatui bridges Elixir and Rust through [Rustler](https://github.com/rustler-beam/rustler) NIFs (Native Implemented Functions):
-
-```
-Elixir structs → encode to maps → Rust NIF → decode to ratatui types → render to terminal
-Terminal events → Rust NIF (DirtyIo) → encode to tuples → Elixir Event structs
-```
-
-- **Rendering:** Elixir widget structs are encoded as string-keyed maps, passed across the NIF boundary, and decoded into ratatui widget types for rendering.
-- **Events:** The `poll_event` NIF runs on BEAM's DirtyIo scheduler, so event polling never blocks normal Elixir processes.
-- **Terminal state:** Managed in Rust via a global mutex supporting two backends — a real crossterm terminal and a headless test backend for CI.
-- **Layout:** Ratatui's constraint-based layout engine is exposed directly, computing split rectangles on the Rust side and returning them as Elixir tuples.
-
-Precompiled binaries are provided via [rustler_precompiled](https://github.com/philss/rustler_precompiled) so users don't need the Rust toolchain.
 
 ## Quick Start
 
@@ -70,6 +90,22 @@ end)
 ```
 
 Run it with `mix run examples/hello_world.exs`.
+
+## How It Works
+
+ExRatatui bridges Elixir and Rust through [Rustler](https://github.com/rustler-beam/rustler) NIFs (Native Implemented Functions):
+
+```
+Elixir structs -> encode to maps -> Rust NIF -> decode to ratatui types -> render to terminal
+Terminal events -> Rust NIF (DirtyIo) -> encode to tuples -> Elixir Event structs
+```
+
+- **Rendering:** Elixir widget structs are encoded as string-keyed maps, passed across the NIF boundary, and decoded into ratatui widget types for rendering.
+- **Events:** The `poll_event` NIF runs on BEAM's DirtyIo scheduler, so event polling never blocks normal Elixir processes.
+- **Terminal state:** Managed in Rust via a global mutex supporting two backends — a real crossterm terminal and a headless test backend for CI.
+- **Layout:** Ratatui's constraint-based layout engine is exposed directly, computing split rectangles on the Rust side and returning them as Elixir tuples.
+
+Precompiled binaries are provided via [rustler_precompiled](https://github.com/philss/rustler_precompiled) so users don't need the Rust toolchain.
 
 ## Widgets
 
@@ -226,13 +262,11 @@ test "renders a paragraph" do
 end
 ```
 
-## Examples
+## Contributing
 
-| Example | Run | Description |
-|---------|-----|-------------|
-| `hello_world.exs` | `mix run examples/hello_world.exs` | Minimal paragraph display |
-| `counter.exs` | `mix run examples/counter.exs` | Interactive counter with key events |
-| `task_tracker.exs` | `mix run examples/task_tracker.exs` | Interactive task tracker with all widgets |
+Contributions of all kinds are welcome! Whether it's bug reports, feature requests, documentation improvements, or code — every contribution helps.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 

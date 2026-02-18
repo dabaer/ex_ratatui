@@ -3,6 +3,7 @@ defmodule ExRatatui.MixProject do
 
   @description "Elixir bindings for the Rust ratatui terminal UI library"
   @source_url "https://github.com/mcass19/ex_ratatui"
+  @changelog_url @source_url <> "/blob/-/CHANGELOG.md"
   @version "0.1.0"
 
   def project do
@@ -28,8 +29,12 @@ defmodule ExRatatui.MixProject do
 
   defp deps do
     [
-      {:rustler, ">= 0.0.0", optional: true},
       {:rustler_precompiled, "~> 0.8"},
+
+      # Optional
+      {:rustler, ">= 0.0.0", optional: true},
+
+      # Dev
       {:ex_doc, "~> 0.35", only: :dev, runtime: false}
     ]
   end
@@ -39,21 +44,8 @@ defmodule ExRatatui.MixProject do
       licenses: ["MIT"],
       links: %{
         "GitHub" => @source_url,
-        "Changelog" => @source_url <> "/blob/main/CHANGELOG.md"
-      },
-      files: ~w(
-        lib
-        native/ex_ratatui/.cargo
-        native/ex_ratatui/src
-        native/ex_ratatui/Cargo*
-        checksum-*.exs
-        priv
-        .formatter.exs
-        mix.exs
-        README.md
-        LICENSE
-        CHANGELOG.md
-      )
+        "Changelog" => @changelog_url
+      }
     ]
   end
 

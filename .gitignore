@@ -31,5 +31,8 @@ ex_ratatui-*.tar
 # claude
 .claude/
 
+# Dev docs (personal notes, release process)
+docs/dev/
+
 # mise
 mise.toml
