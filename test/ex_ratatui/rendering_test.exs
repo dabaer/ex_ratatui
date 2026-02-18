@@ -7,13 +7,16 @@ defmodule ExRatatui.RenderingTest do
   alias ExRatatui.Widgets.Paragraph
 
   setup do
-    # Ensure clean terminal state
     Native.restore_terminal()
+    :ok = ExRatatui.init_test_terminal(40, 10)
+    on_exit(fn -> Native.restore_terminal() end)
     :ok
   end
 
   describe "draw/1" do
     test "returns error when terminal not initialized" do
+      Native.restore_terminal()
+
       paragraph = %Paragraph{text: "Hello"}
       rect = %Rect{x: 0, y: 0, width: 80, height: 24}
 
@@ -25,14 +28,8 @@ defmodule ExRatatui.RenderingTest do
       paragraph = %Paragraph{text: "Hello, world!"}
       rect = %Rect{x: 0, y: 0, width: 40, height: 5}
 
-      case Native.init_terminal() do
-        :ok ->
-          assert :ok = ExRatatui.draw([{paragraph, rect}])
-          Native.restore_terminal()
-
-        {:error, _} ->
-          :ok
-      end
+      assert :ok = ExRatatui.draw([{paragraph, rect}])
+      assert ExRatatui.get_buffer_content() =~ "Hello, world!"
     end
 
     test "accepts paragraph with styled text" do
@@ -45,14 +42,8 @@ defmodule ExRatatui.RenderingTest do
 
       rect = %Rect{x: 0, y: 0, width: 40, height: 5}
 
-      case Native.init_terminal() do
-        :ok ->
-          assert :ok = ExRatatui.draw([{paragraph, rect}])
-          Native.restore_terminal()
-
-        {:error, _} ->
-          :ok
-      end
+      assert :ok = ExRatatui.draw([{paragraph, rect}])
+      assert ExRatatui.get_buffer_content() =~ "Styled text"
     end
 
     test "accepts paragraph with RGB color" do
@@ -63,14 +54,8 @@ defmodule ExRatatui.RenderingTest do
 
       rect = %Rect{x: 0, y: 0, width: 40, height: 5}
 
-      case Native.init_terminal() do
-        :ok ->
-          assert :ok = ExRatatui.draw([{paragraph, rect}])
-          Native.restore_terminal()
-
-        {:error, _} ->
-          :ok
-      end
+      assert :ok = ExRatatui.draw([{paragraph, rect}])
+      assert ExRatatui.get_buffer_content() =~ "RGB colored"
     end
 
     test "accepts multiple widgets in one frame" do
@@ -79,25 +64,14 @@ defmodule ExRatatui.RenderingTest do
         {%Paragraph{text: "Bottom"}, %Rect{x: 0, y: 3, width: 40, height: 3}}
       ]
 
-      case Native.init_terminal() do
-        :ok ->
-          assert :ok = ExRatatui.draw(widgets)
-          Native.restore_terminal()
-
-        {:error, _} ->
-          :ok
-      end
+      assert :ok = ExRatatui.draw(widgets)
+      content = ExRatatui.get_buffer_content()
+      assert content =~ "Top"
+      assert content =~ "Bottom"
     end
 
     test "accepts empty widget list" do
-      case Native.init_terminal() do
-        :ok ->
-          assert :ok = ExRatatui.draw([])
-          Native.restore_terminal()
-
-        {:error, _} ->
-          :ok
-      end
+      assert :ok = ExRatatui.draw([])
     end
   end
 end
