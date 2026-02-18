@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Terminal lifecycle:** `ExRatatui.run/1` for automatic terminal init and cleanup
 - **Test backend:** Headless `TestBackend` via `init_test_terminal/2` and `get_buffer_content/0` for CI-friendly rendering verification
 - **Precompiled NIFs:** Via `rustler_precompiled` for Linux, macOS, and Windows (x86_64 and aarch64) — no Rust toolchain required
-- **Examples:** `hello_world.exs` (minimal display), `counter.exs` (interactive key events), `task_tracker.exs` (full app with all widgets)
+- **Examples:** `hello_world.exs` (minimal display), `counter.exs` (interactive key events), `task_manager.exs` (full app with all widgets)
 
 [Unreleased]: https://github.com/mcass19/ex_ratatui/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/mcass19/ex_ratatui/releases/tag/v0.1.0

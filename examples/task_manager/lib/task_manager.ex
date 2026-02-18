@@ -38,6 +38,11 @@ defmodule TaskManager do
     update_task(task, %{status: next})
   end
 
+  def cycle_priority(%Task{} = task) do
+    next = next_priority(task.priority)
+    update_task(task, %{priority: next})
+  end
+
   def completion_stats do
     total = Repo.aggregate(Task, :count)
     done = Repo.one(from(t in Task, where: t.status == "done", select: count()))
@@ -48,4 +53,9 @@ defmodule TaskManager do
   defp next_status("in_progress"), do: "done"
   defp next_status("done"), do: "todo"
   defp next_status(_), do: "todo"
+
+  defp next_priority(1), do: 2
+  defp next_priority(2), do: 3
+  defp next_priority(3), do: 1
+  defp next_priority(_), do: 2
 end

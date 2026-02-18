@@ -24,6 +24,10 @@ mix ecto.setup
 mix run --no-halt
 ```
 
+`--no-halt` keeps the BEAM VM alive after starting the application. Without it, the VM would exit immediately after booting the supervision tree, killing the TUI process.
+
+Data is stored in a local SQLite file at `task_manager_dev.db` (or `task_manager_test.db` for tests).
+
 ## Controls
 
 | Key | Action |
@@ -31,6 +35,7 @@ mix run --no-halt
 | `j` / `Down` | Move selection down |
 | `k` / `Up` | Move selection up |
 | `Enter` | Toggle task status (Todo -> In Progress -> Done) |
+| `p` | Cycle priority (High -> Med -> Low) |
 | `n` | Create new task (type name, Enter to confirm) |
 | `d` | Delete selected task |
 | `f` | Cycle filter (All / Todo / In Progress / Done) |

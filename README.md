@@ -34,7 +34,7 @@ Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, 
 | `hello_world.exs` | `mix run examples/hello_world.exs` | Minimal paragraph display |
 | `counter.exs` | `mix run examples/counter.exs` | Interactive counter with key events |
 | `counter_app.exs` | `mix run examples/counter_app.exs` | Counter using `ExRatatui.App` behaviour |
-| `task_tracker.exs` | `mix run examples/task_tracker.exs` | Full task tracker with all widgets |
+| `task_manager.exs` | `mix run examples/task_manager.exs` | Full task manager with all widgets |
 | `task_manager/` | See [README](examples/task_manager/README.md) | Supervised Ecto + SQLite CRUD app |
 
 ## Installation

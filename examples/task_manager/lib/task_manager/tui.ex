@@ -45,6 +45,10 @@ defmodule TaskManager.TUI do
   # ── Callbacks ──────────────────────────────────────────────────
 
   @impl true
+  def terminate(:normal, _state), do: System.stop(0)
+  def terminate(_reason, _state), do: :ok
+
+  @impl true
   def mount(_opts) do
     tasks = TaskManager.list_tasks(:all)
     {total, done} = TaskManager.completion_stats()
@@ -120,6 +124,11 @@ defmodule TaskManager.TUI do
     {:noreply, state}
   end
 
+  def handle_event(%ExRatatui.Event.Key{code: "p", kind: "press"}, %{input_mode: nil} = state) do
+    state = cycle_selected_priority(state)
+    {:noreply, state}
+  end
+
   def handle_event(%ExRatatui.Event.Key{code: "f", kind: "press"}, %{input_mode: nil} = state) do
     next_filter = cycle_filter(state.filter)
     state = %{state | filter: next_filter}
@@ -172,12 +181,12 @@ defmodule TaskManager.TUI do
     task_count = length(state.tasks)
 
     %Paragraph{
-      text: "  Task Manager \u2014 Filter: #{filter_label} [#{task_count} tasks]",
-      style: %Style{fg: :cyan, modifiers: [:bold]},
+      text: "  \u2728 Task Manager \u2014 Filter: #{filter_label} [#{task_count} tasks]",
+      style: %Style{fg: :white, modifiers: [:bold]},
       block: %Block{
         borders: [:all],
         border_type: :rounded,
-        border_style: %Style{fg: :dark_gray}
+        border_style: %Style{fg: {:rgb, 100, 149, 237}}
       }
     }
   end
@@ -197,9 +206,9 @@ defmodule TaskManager.TUI do
 
     title =
       if state.input_mode == :new_task do
-        " New task: #{state.input_buffer}\u2588 "
+        " \u270F\uFE0F  New task: #{state.input_buffer}\u2588 "
       else
-        " Tasks "
+        " \u{1F4CB} Tasks "
       end
 
     selected =
@@ -213,15 +222,15 @@ defmodule TaskManager.TUI do
       rows: rows,
       header: ["#", "Title", "Status", "Priority"],
       widths: [{:length, 4}, {:min, 10}, {:length, 16}, {:length, 10}],
-      highlight_style: %Style{fg: :yellow, modifiers: [:bold]},
-      highlight_symbol: " \u25B8 ",
+      highlight_style: %Style{fg: {:rgb, 255, 215, 0}, bg: {:rgb, 40, 40, 60}, modifiers: [:bold]},
+      highlight_symbol: " \u25B6 ",
       selected: selected,
-      column_spacing: 1,
+      column_spacing: 2,
       block: %Block{
         title: title,
         borders: [:all],
         border_type: :rounded,
-        border_style: %Style{fg: :cyan}
+        border_style: %Style{fg: {:rgb, 100, 149, 237}}
       }
     }
   end
@@ -236,8 +245,8 @@ defmodule TaskManager.TUI do
 
     %Gauge{
       ratio: ratio,
-      label: "#{state.done}/#{state.total} tasks done",
-      gauge_style: %Style{fg: :green},
+      label: "\u2588 #{state.done}/#{state.total} tasks done",
+      gauge_style: %Style{fg: {:rgb, 80, 200, 120}},
       style: %Style{fg: :white}
     }
   end
@@ -245,18 +254,18 @@ defmodule TaskManager.TUI do
   defp footer_widget(state) do
     text =
       if state.input_mode == :new_task do
-        "  Type task name, Enter to confirm, Esc to cancel"
+        "  \u270F\uFE0F  Type task name, Enter to confirm, Esc to cancel"
       else
-        "  j/\u2193 k/\u2191 Enter:toggle  n:new  d:del  f:filter  q:quit"
+        "  j/\u2193 k/\u2191 Enter:toggle  n:new  d:del  p:priority  f:filter  q:quit"
       end
 
     %Paragraph{
       text: text,
-      style: %Style{fg: :dark_gray},
+      style: %Style{fg: {:rgb, 150, 150, 170}},
       block: %Block{
         borders: [:all],
         border_type: :rounded,
-        border_style: %Style{fg: :dark_gray}
+        border_style: %Style{fg: {:rgb, 60, 60, 80}}
       }
     }
   end
@@ -292,6 +301,17 @@ defmodule TaskManager.TUI do
     end
   end
 
+  defp cycle_selected_priority(state) do
+    task = Enum.at(state.tasks, state.selected)
+
+    if task do
+      TaskManager.cycle_priority(task)
+      refresh_tasks(state)
+    else
+      state
+    end
+  end
+
   defp cycle_filter(:all), do: :todo
   defp cycle_filter(:todo), do: :in_progress
   defp cycle_filter(:in_progress), do: :done
@@ -302,13 +322,13 @@ defmodule TaskManager.TUI do
   defp filter_display(:in_progress), do: "In Progress"
   defp filter_display(:done), do: "Done"
 
-  defp status_display("done"), do: "\u2713 Done"
-  defp status_display("in_progress"), do: "\u25D0 In Progress"
+  defp status_display("done"), do: "\u2714 Done"
+  defp status_display("in_progress"), do: "\u25B6 In Progress"
   defp status_display("todo"), do: "\u25CB Todo"
   defp status_display(other), do: "? #{other}"
 
-  defp priority_display(1), do: "\u2605\u2605\u2605"
-  defp priority_display(2), do: "\u2605\u2605"
-  defp priority_display(3), do: "\u2605"
-  defp priority_display(_), do: "\u2605\u2605"
+  defp priority_display(1), do: "\u2605\u2605\u2605 High"
+  defp priority_display(2), do: "\u2605\u2605  Med"
+  defp priority_display(3), do: "\u2605   Low"
+  defp priority_display(_), do: "\u2605\u2605  Med"
 end
