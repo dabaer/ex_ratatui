@@ -50,6 +50,9 @@ defmodule ExRatatui.App do
       `{:noreply, new_state}` or `{:stop, state}`.
     * `handle_info/2` — Called for non-terminal messages (e.g., PubSub).
       Optional; default implementation returns `{:noreply, state}`.
+    * `terminate/2` — Called when the TUI is shutting down. Receives the
+      exit reason and final state. Optional; default is a no-op.
+      Use this to stop the VM with `System.stop(0)` in standalone apps.
   """
 
   @type state :: term()
@@ -62,6 +65,9 @@ defmodule ExRatatui.App do
             ) ::
               {:noreply, state()} | {:stop, state()}
   @callback handle_info(msg :: term(), state()) :: {:noreply, state()} | {:stop, state()}
+  @callback terminate(reason :: term(), state()) :: term()
+
+  @optional_callbacks [terminate: 2]
 
   defmacro __using__(_opts) do
     quote do
@@ -70,7 +76,10 @@ defmodule ExRatatui.App do
       @doc false
       def handle_info(_msg, state), do: {:noreply, state}
 
-      defoverridable handle_info: 2
+      @doc false
+      def terminate(_reason, _state), do: :ok
+
+      defoverridable handle_info: 2, terminate: 2
 
       @doc false
       def child_spec(opts) do
@@ -78,7 +87,7 @@ defmodule ExRatatui.App do
           id: __MODULE__,
           start: {__MODULE__, :start_link, [opts]},
           type: :worker,
-          restart: :permanent
+          restart: :transient
         }
       end
 

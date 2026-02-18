@@ -33,7 +33,7 @@ defmodule ExRatatui.AppTest do
     spec = SampleApp.child_spec([])
     assert spec.id == SampleApp
     assert spec.type == :worker
-    assert spec.restart == :permanent
+    assert spec.restart == :transient
   end
 
   # -- Integration tests: App -> child_spec -> Server chain --
@@ -80,6 +80,6 @@ defmodule ExRatatui.AppTest do
     assert spec.id == SupervisedApp
     assert spec.start == {SupervisedApp, :start_link, [[test_pid: self(), test_mode: {40, 10}]]}
     assert spec.type == :worker
-    assert spec.restart == :permanent
+    assert spec.restart == :transient
   end
 end

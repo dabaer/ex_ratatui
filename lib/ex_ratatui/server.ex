@@ -91,8 +91,9 @@ defmodule ExRatatui.Server do
   end
 
   @impl true
-  def terminate(_reason, %__MODULE__{terminal_initialized: true}) do
+  def terminate(reason, %__MODULE__{terminal_initialized: true} = state) do
     restore_terminal()
+    state.mod.terminate(reason, state.user_state)
     :ok
   end
 
