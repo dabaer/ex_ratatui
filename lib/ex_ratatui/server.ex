@@ -8,7 +8,7 @@ defmodule ExRatatui.Server do
   alias ExRatatui.Frame
   alias ExRatatui.Native
 
-  defstruct [:mod, :user_state, poll_interval: 16, terminal_initialized: false]
+  defstruct [:mod, :user_state, :test_mode, poll_interval: 16, terminal_initialized: false]
 
   @doc false
   def start_link(opts) do
@@ -33,6 +33,7 @@ defmodule ExRatatui.Server do
               mod: mod,
               user_state: user_state,
               poll_interval: poll_interval,
+              test_mode: test_mode,
               terminal_initialized: true
             }
 
@@ -126,9 +127,15 @@ defmodule ExRatatui.Server do
 
   defp do_render(state) do
     {w, h} =
-      case ExRatatui.terminal_size() do
-        {w, h} when is_integer(w) and is_integer(h) -> {w, h}
-        {:error, _} -> {80, 24}
+      case state.test_mode do
+        {w, h} ->
+          {w, h}
+
+        nil ->
+          case ExRatatui.terminal_size() do
+            {w, h} when is_integer(w) and is_integer(h) -> {w, h}
+            {:error, _} -> {80, 24}
+          end
       end
 
     frame = %Frame{width: w, height: h}

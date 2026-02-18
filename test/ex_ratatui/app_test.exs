@@ -1,5 +1,5 @@
 defmodule ExRatatui.AppTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   defmodule SampleApp do
     use ExRatatui.App

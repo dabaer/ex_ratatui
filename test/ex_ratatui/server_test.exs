@@ -1,5 +1,5 @@
 defmodule ExRatatui.ServerTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   alias ExRatatui.Native
   alias ExRatatui.Frame
