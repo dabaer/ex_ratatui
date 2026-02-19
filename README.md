@@ -9,6 +9,8 @@ Elixir bindings for the Rust [ratatui](https://ratatui.rs) terminal UI library, 
 
 Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, and styling system — without blocking the BEAM.
 
+<video src="assets/ex_ratatui_demo.mp4" autoplay loop muted playsinline></video>
+
 ## Features
 
 - 5 built-in widgets: Paragraph, Block, List, Table, Gauge
