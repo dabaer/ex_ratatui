@@ -24,6 +24,8 @@ ex_ratatui-*.tar
 
 # Rust binary artifacts
 /target/
+/native/ex_ratatui/target/
+/native/ex_ratatui/Cargo.lock
 
 # Compiled NIF shared libraries
 /priv/native/
