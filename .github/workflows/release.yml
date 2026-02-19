@@ -5,8 +5,11 @@ on:
     tags:
       - "v*"
 
+env:
+  NIF_DIRECTORY: native/ex_ratatui
+
 jobs:
-  build_release:
+  build_linux:
     name: NIF ${{ matrix.nif }} - ${{ matrix.job.target }} (${{ matrix.job.os }})
     runs-on: ${{ matrix.job.os }}
     permissions:
@@ -19,33 +22,20 @@ jobs:
           - { target: arm-unknown-linux-gnueabihf,  os: ubuntu-22.04, use-cross: true }
           - { target: aarch64-unknown-linux-gnu,     os: ubuntu-22.04, use-cross: true }
           - { target: aarch64-unknown-linux-musl,    os: ubuntu-22.04, use-cross: true }
-          - { target: aarch64-apple-darwin,          os: macos-14 }
-          - { target: x86_64-apple-darwin,           os: macos-13 }
           - { target: x86_64-unknown-linux-gnu,      os: ubuntu-22.04 }
           - { target: x86_64-unknown-linux-musl,     os: ubuntu-22.04, use-cross: true }
-          - { target: x86_64-pc-windows-gnu,         os: windows-2022 }
-          - { target: x86_64-pc-windows-msvc,        os: windows-2022 }
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Extract project version
         shell: bash
         run: |
-          # Ensure no carriage returns on Windows
-          echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' mix.exs | head -n1 | tr -d '\r')" >> $GITHUB_ENV
+          echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' mix.exs | head -n1)" >> $GITHUB_ENV
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@stable
         with:
           target: ${{ matrix.job.target }}
-
-      - name: Install GNU tar (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          brew install gnu-tar
-          echo "$(brew --prefix)/opt/gnu-tar/libexec/gnubin" >> $GITHUB_PATH
 
       - name: Build the project
         id: build-crate
@@ -58,8 +48,7 @@ jobs:
           use-cross: ${{ matrix.job.use-cross || false }}
           project-dir: "native/ex_ratatui"
 
-      - name: Artifact upload
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build-crate.outputs.file-name }}
           path: ${{ steps.build-crate.outputs.file-path }}
@@ -69,4 +58,75 @@ jobs:
         with:
           files: |
             ${{ steps.build-crate.outputs.file-path }}
+        if: startsWith(github.ref, 'refs/tags/')
+
+  build_macos_windows:
+    name: NIF ${{ matrix.nif }} - ${{ matrix.job.target }} (${{ matrix.job.os }})
+    runs-on: ${{ matrix.job.os }}
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        nif: ["2.17", "2.16"]
+        job:
+          - { target: aarch64-apple-darwin,  os: macos-14,     ext: so, prefix: lib }
+          - { target: x86_64-apple-darwin,   os: macos-14,     ext: so, prefix: lib }
+          - { target: x86_64-pc-windows-gnu,  os: windows-2022, ext: dll, prefix: "" }
+          - { target: x86_64-pc-windows-msvc, os: windows-2022, ext: dll, prefix: "" }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract project version
+        shell: bash
+        run: |
+          echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' mix.exs | head -n1 | tr -d '\r')" >> $GITHUB_ENV
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          target: ${{ matrix.job.target }}
+
+      - name: Set NIF version feature
+        shell: bash
+        run: |
+          case "${{ matrix.nif }}" in
+            "2.17") echo "RUSTLER_NIF_VERSION=2.17" >> $GITHUB_ENV ;;
+            "2.16") echo "RUSTLER_NIF_VERSION=2.16" >> $GITHUB_ENV ;;
+          esac
+
+      - name: Build NIF
+        shell: bash
+        run: |
+          cargo build --release --target ${{ matrix.job.target }} --manifest-path ${{ env.NIF_DIRECTORY }}/Cargo.toml
+
+      - name: Package artifact
+        shell: bash
+        run: |
+          ARCHIVE_NAME="${{ matrix.job.prefix }}ex_ratatui-v${{ env.PROJECT_VERSION }}-nif-${{ matrix.nif }}-${{ matrix.job.target }}.${{ matrix.job.ext }}.tar.gz"
+          echo "ARCHIVE_NAME=${ARCHIVE_NAME}" >> $GITHUB_ENV
+
+          # Find the built library
+          if [ "${{ matrix.job.ext }}" = "dll" ]; then
+            LIB_FILE="${{ env.NIF_DIRECTORY }}/target/${{ matrix.job.target }}/release/ex_ratatui.dll"
+          else
+            LIB_FILE="${{ env.NIF_DIRECTORY }}/target/${{ matrix.job.target }}/release/libex_ratatui.so"
+            # macOS produces .dylib but rustler_precompiled expects .so
+            if [ ! -f "$LIB_FILE" ]; then
+              cp "${{ env.NIF_DIRECTORY }}/target/${{ matrix.job.target }}/release/libex_ratatui.dylib" "$LIB_FILE"
+            fi
+          fi
+
+          tar -czf "${ARCHIVE_NAME}" -C "$(dirname "$LIB_FILE")" "$(basename "$LIB_FILE")"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARCHIVE_NAME }}
+          path: ${{ env.ARCHIVE_NAME }}
+
+      - name: Publish archives and packages
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ env.ARCHIVE_NAME }}
         if: startsWith(github.ref, 'refs/tags/')
