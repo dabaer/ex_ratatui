@@ -60,16 +60,20 @@ defmodule ExRatatui.MixProject do
         "CHANGELOG.md": [title: "Changelog"]
       ],
       groups_for_modules: [
+        Application: [
+          ExRatatui.App
+        ],
+        Layout: [
+          ExRatatui.Frame,
+          ExRatatui.Layout,
+          ExRatatui.Layout.Rect
+        ],
         Widgets: [
           ExRatatui.Widgets.Paragraph,
           ExRatatui.Widgets.Block,
           ExRatatui.Widgets.List,
           ExRatatui.Widgets.Table,
           ExRatatui.Widgets.Gauge
-        ],
-        Layout: [
-          ExRatatui.Layout,
-          ExRatatui.Layout.Rect
         ],
         Events: [
           ExRatatui.Event,
