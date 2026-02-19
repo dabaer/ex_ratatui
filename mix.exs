@@ -49,7 +49,8 @@ defmodule ExRatatui.MixProject do
       files: ~w(
         lib native .formatter.exs mix.exs README.md LICENSE CHANGELOG.md
         checksum-Elixir.ExRatatui.Native.exs
-      )
+      ),
+      exclude_patterns: ~w(native/ex_ratatui/target)
     ]
   end
 
