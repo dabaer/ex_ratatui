@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Simplified release workflow by using `rustler-precompiled-action` instead of manual build and packaging steps
+
 ### Added
 
 - Precompiled NIF targets for `riscv64gc-unknown-linux-gnu` (Nerves RISC-V boards) and `x86_64-unknown-freebsd`
