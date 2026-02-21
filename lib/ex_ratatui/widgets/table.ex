@@ -27,6 +27,18 @@ defmodule ExRatatui.Widgets.Table do
       }
   """
 
+  @type t :: %__MODULE__{
+          rows: [[String.t()]],
+          header: [String.t()] | nil,
+          widths: [ExRatatui.Layout.constraint()],
+          style: ExRatatui.Style.t(),
+          block: ExRatatui.Widgets.Block.t() | nil,
+          highlight_style: ExRatatui.Style.t(),
+          highlight_symbol: String.t() | nil,
+          selected: non_neg_integer() | nil,
+          column_spacing: non_neg_integer()
+        }
+
   defstruct rows: [],
             header: nil,
             widths: [],

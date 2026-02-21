@@ -21,6 +21,15 @@ defmodule ExRatatui.Widgets.Paragraph do
       }
   """
 
+  @type t :: %__MODULE__{
+          text: String.t(),
+          style: ExRatatui.Style.t(),
+          block: ExRatatui.Widgets.Block.t() | nil,
+          alignment: :left | :center | :right,
+          wrap: boolean(),
+          scroll: {non_neg_integer(), non_neg_integer()}
+        }
+
   defstruct text: "",
             style: %ExRatatui.Style{},
             block: nil,

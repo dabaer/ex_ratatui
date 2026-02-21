@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Typespecs (`@type t`) for all widget, event, and frame structs
+- Function specs (`@spec`) for all public API functions
+- Dialyzer static analysis in CI
+
 ## [0.2.0] - 2026-02-21
 
 ### Changed

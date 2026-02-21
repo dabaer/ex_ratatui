@@ -20,6 +20,14 @@ defmodule ExRatatui.Widgets.Gauge do
       }
   """
 
+  @type t :: %__MODULE__{
+          ratio: float(),
+          label: String.t() | nil,
+          style: ExRatatui.Style.t(),
+          block: ExRatatui.Widgets.Block.t() | nil,
+          gauge_style: ExRatatui.Style.t()
+        }
+
   defstruct ratio: 0.0,
             label: nil,
             style: %ExRatatui.Style{},

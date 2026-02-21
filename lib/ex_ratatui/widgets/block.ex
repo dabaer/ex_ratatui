@@ -24,6 +24,18 @@ defmodule ExRatatui.Widgets.Block do
       }
   """
 
+  @type border_side :: :all | :top | :right | :bottom | :left
+  @type border_type :: :plain | :rounded | :double | :thick
+
+  @type t :: %__MODULE__{
+          title: String.t() | nil,
+          borders: [border_side()],
+          border_style: ExRatatui.Style.t(),
+          border_type: border_type(),
+          style: ExRatatui.Style.t(),
+          padding: {non_neg_integer(), non_neg_integer(), non_neg_integer(), non_neg_integer()}
+        }
+
   defstruct title: nil,
             borders: [],
             border_style: %ExRatatui.Style{},

@@ -69,6 +69,7 @@ defmodule ExRatatui.Layout do
         {:percentage, 50}
       ])
   """
+  @spec split(Rect.t(), direction(), [constraint()]) :: [Rect.t()] | {:error, term()}
   def split(%Rect{} = area, direction, constraints)
       when direction in [:horizontal, :vertical] and is_list(constraints) do
     rect_map = %{"x" => area.x, "y" => area.y, "width" => area.width, "height" => area.height}

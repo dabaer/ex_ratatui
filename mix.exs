@@ -17,7 +17,8 @@ defmodule ExRatatui.MixProject do
       package: package(),
       name: "ExRatatui",
       source_url: @source_url,
-      docs: docs()
+      docs: docs(),
+      dialyzer: [plt_add_apps: [:rustler]]
     ]
   end
 
@@ -35,7 +36,8 @@ defmodule ExRatatui.MixProject do
       {:rustler, ">= 0.0.0", optional: true},
 
       # Dev
-      {:ex_doc, "~> 0.35", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.35", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.4", only: :dev, runtime: false}
     ]
   end
 

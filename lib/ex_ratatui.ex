@@ -10,6 +10,13 @@ defmodule ExRatatui do
   alias ExRatatui.Style
   alias ExRatatui.Widgets.{Block, Gauge, List, Paragraph, Table}
 
+  @type widget ::
+          Paragraph.t()
+          | Block.t()
+          | List.t()
+          | Table.t()
+          | Gauge.t()
+
   @doc """
   Runs a TUI application.
 
@@ -19,6 +26,7 @@ defmodule ExRatatui do
         # your TUI loop here
       end)
   """
+  @spec run((-> term())) :: term() | {:error, term()}
   def run(fun) when is_function(fun, 0) do
     case Native.init_terminal() do
       :ok ->
@@ -42,6 +50,7 @@ defmodule ExRatatui do
         {%ExRatatui.Widgets.Paragraph{text: "Hello!"}, rect}
       ])
   """
+  @spec draw([{widget(), Rect.t()}]) :: :ok | {:error, term()}
   def draw(widgets) when is_list(widgets) do
     commands = Enum.map(widgets, &encode_command/1)
     Native.draw_frame(commands)
@@ -53,6 +62,8 @@ defmodule ExRatatui do
   Returns an `Event.Key`, `Event.Mouse`, `Event.Resize` struct, `nil`
   if no event within the timeout, or `{:error, reason}` on failure.
   """
+  @spec poll_event(non_neg_integer()) ::
+          ExRatatui.Event.t() | nil | {:error, term()}
   def poll_event(timeout_ms \\ 250) do
     alias ExRatatui.Event
 
@@ -79,6 +90,7 @@ defmodule ExRatatui do
 
   Returns `{:error, reason}` if the terminal size cannot be determined.
   """
+  @spec terminal_size() :: {non_neg_integer(), non_neg_integer()} | {:error, term()}
   def terminal_size do
     case Native.terminal_size() do
       {w, h} when is_integer(w) and is_integer(h) -> {w, h}
@@ -96,6 +108,7 @@ defmodule ExRatatui do
       ExRatatui.draw([{widget, rect}])
       content = ExRatatui.get_buffer_content()
   """
+  @spec init_test_terminal(non_neg_integer(), non_neg_integer()) :: :ok | {:error, term()}
   def init_test_terminal(width, height) do
     Native.init_test_terminal(width, height)
   end
@@ -106,6 +119,7 @@ defmodule ExRatatui do
   Each line is trimmed of trailing whitespace and joined with newlines.
   Only works after `init_test_terminal/2`.
   """
+  @spec get_buffer_content() :: String.t() | {:error, term()}
   def get_buffer_content do
     Native.get_buffer_content()
   end

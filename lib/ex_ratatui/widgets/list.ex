@@ -22,6 +22,15 @@ defmodule ExRatatui.Widgets.List do
       }
   """
 
+  @type t :: %__MODULE__{
+          items: [String.t()],
+          style: ExRatatui.Style.t(),
+          block: ExRatatui.Widgets.Block.t() | nil,
+          highlight_style: ExRatatui.Style.t(),
+          highlight_symbol: String.t() | nil,
+          selected: non_neg_integer() | nil
+        }
+
   defstruct items: [],
             style: %ExRatatui.Style{},
             block: nil,
