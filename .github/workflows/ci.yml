@@ -48,7 +48,7 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             native/ex_ratatui/target
-          key: cargo-${{ runner.os }}-${{ hashFiles('native/ex_ratatui/Cargo.lock', 'Cargo.lock') }}
+          key: cargo-${{ runner.os }}-${{ hashFiles('native/ex_ratatui/Cargo.lock') }}
           restore-keys: cargo-${{ runner.os }}-
 
       - run: mix deps.get --check-locked
