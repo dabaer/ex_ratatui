@@ -5,11 +5,8 @@ on:
     tags:
       - "v*"
 
-env:
-  NIF_DIRECTORY: native/ex_ratatui
-
 jobs:
-  build_linux:
+  build_release:
     name: NIF ${{ matrix.nif }} - ${{ matrix.job.target }} (${{ matrix.job.os }})
     runs-on: ${{ matrix.job.os }}
     permissions:
@@ -19,62 +16,16 @@ jobs:
       matrix:
         nif: ["2.17", "2.16"]
         job:
-          - { target: arm-unknown-linux-gnueabihf,    os: ubuntu-22.04, use-cross: true }
-          - { target: aarch64-unknown-linux-gnu,       os: ubuntu-22.04, use-cross: true }
-          - { target: aarch64-unknown-linux-musl,      os: ubuntu-22.04, use-cross: true }
-          - { target: riscv64gc-unknown-linux-gnu,     os: ubuntu-22.04, use-cross: true }
-          - { target: x86_64-unknown-linux-gnu,        os: ubuntu-22.04 }
-          - { target: x86_64-unknown-linux-musl,       os: ubuntu-22.04, use-cross: true }
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Extract project version
-        shell: bash
-        run: |
-          echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' mix.exs | head -n1)" >> $GITHUB_ENV
-
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          target: ${{ matrix.job.target }}
-
-      - name: Build the project
-        id: build-crate
-        uses: philss/rustler-precompiled-action@v1.1.4
-        with:
-          project-name: ex_ratatui
-          project-version: ${{ env.PROJECT_VERSION }}
-          target: ${{ matrix.job.target }}
-          nif-version: ${{ matrix.nif }}
-          use-cross: ${{ matrix.job.use-cross || false }}
-          project-dir: "native/ex_ratatui"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.build-crate.outputs.file-name }}
-          path: ${{ steps.build-crate.outputs.file-path }}
-
-      - name: Publish archives and packages
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            ${{ steps.build-crate.outputs.file-path }}
-        if: startsWith(github.ref, 'refs/tags/')
-
-  build_macos_windows:
-    name: NIF ${{ matrix.nif }} - ${{ matrix.job.target }} (${{ matrix.job.os }})
-    runs-on: ${{ matrix.job.os }}
-    permissions:
-      contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        nif: ["2.17", "2.16"]
-        job:
-          - { target: aarch64-apple-darwin,  os: macos-14 }
-          - { target: x86_64-apple-darwin,   os: macos-13 }
-          - { target: x86_64-pc-windows-gnu,  os: windows-2022 }
-          - { target: x86_64-pc-windows-msvc, os: windows-2022 }
+          - { target: arm-unknown-linux-gnueabihf,  os: ubuntu-22.04, use-cross: true }
+          - { target: aarch64-unknown-linux-gnu,    os: ubuntu-22.04, use-cross: true }
+          - { target: aarch64-unknown-linux-musl,   os: ubuntu-22.04, use-cross: true }
+          - { target: riscv64gc-unknown-linux-gnu,  os: ubuntu-22.04, use-cross: true }
+          - { target: x86_64-unknown-linux-gnu,     os: ubuntu-22.04 }
+          - { target: x86_64-unknown-linux-musl,    os: ubuntu-22.04, use-cross: true }
+          - { target: aarch64-apple-darwin,         os: macos-15 }
+          - { target: x86_64-apple-darwin,          os: macos-15 }
+          - { target: x86_64-pc-windows-gnu,        os: windows-2025 }
+          - { target: x86_64-pc-windows-msvc,       os: windows-2025 }
 
     steps:
       - uses: actions/checkout@v4
@@ -84,9 +35,15 @@ jobs:
         run: |
           echo "PROJECT_VERSION=$(sed -n 's/^  @version "\(.*\)"/\1/p' mix.exs | head -n1 | tr -d '\r')" >> $GITHUB_ENV
 
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Add Rust target
+        shell: bash
+        run: rustup target add ${{ matrix.job.target }}
+
+      - uses: Swatinem/rust-cache@v2
         with:
-          target: ${{ matrix.job.target }}
+          prefix-key: v0-precomp
+          shared-key: ${{ matrix.job.target }}-${{ matrix.nif }}
+          workspaces: native/ex_ratatui
 
       - name: Build the project
         id: build-crate
@@ -96,7 +53,8 @@ jobs:
           project-version: ${{ env.PROJECT_VERSION }}
           target: ${{ matrix.job.target }}
           nif-version: ${{ matrix.nif }}
-          use-cross: false
+          use-cross: ${{ matrix.job.use-cross }}
+          cross-version: ${{ matrix.job.cross-version || 'from-source' }}
           project-dir: "native/ex_ratatui"
 
       - uses: actions/upload-artifact@v4
