@@ -14,7 +14,7 @@ defmodule TaskManager.TUI do
       | 2 | Write tests     | WIP     | **        |
       +-------------------------------------------+
       | ============ 33% done                     |  gauge
-      | j/k:nav Enter:toggle n:new d:del f:filter |  footer
+      | j/k:nav Enter:toggle n:new d:del p:pri ... |  footer
       +-------------------------------------------+
 
   ## Key Bindings
@@ -26,6 +26,7 @@ defmodule TaskManager.TUI do
     - Enter toggle task status
     - `n` new task
     - `d` delete selected task
+    - `p` cycle priority
     - `f` cycle filter
 
   Input mode:

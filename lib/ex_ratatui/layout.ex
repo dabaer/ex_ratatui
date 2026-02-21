@@ -62,6 +62,8 @@ defmodule ExRatatui.Layout do
   @doc """
   Splits a `Rect` into sub-regions based on direction and constraints.
 
+  Returns a list of `%Rect{}` structs or `{:error, reason}` on failure.
+
       [top, bottom] = ExRatatui.Layout.split(area, :vertical, [
         {:percentage, 50},
         {:percentage, 50}

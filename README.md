@@ -71,21 +71,27 @@ export EX_RATATUI_BUILD=true
 ```elixir
 alias ExRatatui.Layout.Rect
 alias ExRatatui.Style
-alias ExRatatui.Widgets.Paragraph
+alias ExRatatui.Widgets.{Block, Paragraph}
 
 ExRatatui.run(fn ->
   {w, h} = ExRatatui.terminal_size()
 
   paragraph = %Paragraph{
-    text: "Hello from ExRatatui!",
+    text: "Hello from ExRatatui!\n\nPress any key to exit.",
     style: %Style{fg: :green, modifiers: [:bold]},
-    alignment: :center
+    alignment: :center,
+    block: %Block{
+      title: " Hello World ",
+      borders: [:all],
+      border_type: :rounded,
+      border_style: %Style{fg: :cyan}
+    }
   }
 
   ExRatatui.draw([{paragraph, %Rect{x: 0, y: 0, width: w, height: h}}])
 
   # Wait for a keypress, then exit
-  ExRatatui.poll_event(5000)
+  ExRatatui.poll_event(60_000)
 end)
 ```
 
@@ -144,6 +150,7 @@ Supervisor.start_link(children, strategy: :one_for_one)
 | `render/2` | Called after every state change. Receives state and `%Frame{}` with terminal dimensions. Return `[{widget, rect}]` |
 | `handle_event/2` | Called on terminal events. Return `{:noreply, state}` or `{:stop, state}` |
 | `handle_info/2` | Called for non-terminal messages (e.g., PubSub). Optional — defaults to `{:noreply, state}` |
+| `terminate/2` | Called on shutdown with reason and final state. Optional — default is a no-op |
 
 See the [task_manager example](examples/task_manager/) for a full Ecto-backed app using this behaviour.
 
