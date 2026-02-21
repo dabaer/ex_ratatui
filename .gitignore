@@ -22,6 +22,9 @@ ex_ratatui-*.tar
 # Temporary files, for example, from tests.
 /tmp/
 
+# Dialyzer PLTs
+/plts/
+
 # Rust binary artifacts
 /Cargo.lock
 /target/

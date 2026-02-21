@@ -18,7 +18,11 @@ defmodule ExRatatui.MixProject do
       name: "ExRatatui",
       source_url: @source_url,
       docs: docs(),
-      dialyzer: [plt_add_apps: [:rustler]]
+      dialyzer: [
+        plt_local_path: "plts",
+        plt_core_path: "plts/core",
+        plt_add_apps: [:rustler]
+      ]
     ]
   end
 
