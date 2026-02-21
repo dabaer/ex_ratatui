@@ -30,6 +30,7 @@ Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, 
 | `hello_world.exs` | `mix run examples/hello_world.exs` | Minimal paragraph display |
 | `counter.exs` | `mix run examples/counter.exs` | Interactive counter with key events |
 | `counter_app.exs` | `mix run examples/counter_app.exs` | Counter using `ExRatatui.App` behaviour |
+| `system_monitor.exs` | `mix run examples/system_monitor.exs` | System dashboard (CPU, memory, disk, network, BEAM stats) |
 | `task_manager.exs` | `mix run examples/task_manager.exs` | Full task manager with all widgets |
 | `task_manager/` | See [README](examples/task_manager/README.md) | Supervised Ecto + SQLite CRUD app |
 
@@ -57,7 +58,7 @@ A precompiled NIF binary for your platform will be downloaded automatically.
 
 - Elixir 1.17+
 
-Precompiled NIF binaries are available for Linux, macOS, and Windows (x86_64 and aarch64). No Rust toolchain needed.
+Precompiled NIF binaries are available for Linux (x86_64, aarch64, armv6/hf, riscv64), macOS (x86_64, aarch64), and Windows (x86_64). No Rust toolchain needed.
 
 To compile from source instead, install the [Rust toolchain](https://rustup.rs/) and set:
 

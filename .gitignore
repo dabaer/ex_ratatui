@@ -23,6 +23,7 @@ ex_ratatui-*.tar
 /tmp/
 
 # Rust binary artifacts
+/Cargo.lock
 /target/
 /native/ex_ratatui/target/
 /native/ex_ratatui/Cargo.lock
