@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-02-21
+
 ### Changed
 
 - Simplified release workflow by using `rustler-precompiled-action` instead of manual build and packaging steps
@@ -43,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Precompiled NIFs:** Via `rustler_precompiled` for Linux, macOS, and Windows (x86_64 and aarch64) — no Rust toolchain required
 - **Examples:** `hello_world.exs` (minimal display), `counter.exs` (interactive key events), `counter_app.exs` (App-based counter), `task_manager.exs` (full app with all widgets), and `examples/task_manager/` (supervised Ecto + SQLite CRUD app)
 
-[Unreleased]: https://github.com/mcass19/ex_ratatui/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/mcass19/ex_ratatui/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/mcass19/ex_ratatui/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/mcass19/ex_ratatui/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/mcass19/ex_ratatui/releases/tag/v0.1.0
