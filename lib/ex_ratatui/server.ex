@@ -44,7 +44,7 @@ defmodule ExRatatui.Server do
             }
 
             state = do_render(state)
-            schedule_poll(state)
+            send(self(), :poll)
 
             {:ok, state}
 
@@ -61,7 +61,7 @@ defmodule ExRatatui.Server do
   @impl true
   def handle_info(:poll, state) do
     result =
-      case ExRatatui.poll_event(0) do
+      case ExRatatui.poll_event(state.poll_interval) do
         nil ->
           {:continue, state}
 
@@ -78,7 +78,7 @@ defmodule ExRatatui.Server do
 
       {:continue, state} ->
         state = do_render(state)
-        schedule_poll(state)
+        send(self(), :poll)
         {:noreply, state}
     end
   end
@@ -116,10 +116,6 @@ defmodule ExRatatui.Server do
     e ->
       Logger.warning("Failed to restore terminal: #{Exception.message(e)}")
       :ok
-  end
-
-  defp schedule_poll(state) do
-    Process.send_after(self(), :poll, state.poll_interval)
   end
 
   defp dispatch_event(state, event) do
