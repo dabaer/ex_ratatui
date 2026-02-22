@@ -12,7 +12,13 @@ defmodule ExRatatui.Server do
 
   @doc false
   def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts, name: opts[:name])
+    {name, opts} = Keyword.pop(opts, :name, __MODULE__)
+
+    if name do
+      GenServer.start_link(__MODULE__, opts, name: name)
+    else
+      GenServer.start_link(__MODULE__, opts)
+    end
   end
 
   ## GenServer callbacks

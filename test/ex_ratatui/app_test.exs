@@ -65,7 +65,7 @@ defmodule ExRatatui.AppTest do
   end
 
   test "start_link starts the server via App module" do
-    {:ok, pid} = SupervisedApp.start_link(test_pid: self(), test_mode: {40, 10})
+    {:ok, pid} = SupervisedApp.start_link(name: nil, test_pid: self(), test_mode: {40, 10})
 
     assert_receive {:supervised_mounted, opts}, 1000
     assert Keyword.get(opts, :test_pid) == self()
@@ -75,10 +75,13 @@ defmodule ExRatatui.AppTest do
   end
 
   test "child_spec has correct start tuple" do
-    spec = SupervisedApp.child_spec(test_pid: self(), test_mode: {40, 10})
+    spec = SupervisedApp.child_spec(name: nil, test_pid: self(), test_mode: {40, 10})
 
     assert spec.id == SupervisedApp
-    assert spec.start == {SupervisedApp, :start_link, [[test_pid: self(), test_mode: {40, 10}]]}
+
+    assert spec.start ==
+             {SupervisedApp, :start_link, [[name: nil, test_pid: self(), test_mode: {40, 10}]]}
+
     assert spec.type == :worker
     assert spec.restart == :transient
   end

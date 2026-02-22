@@ -44,6 +44,7 @@ defmodule ExRatatui.ServerTest do
       {:ok, pid} =
         ExRatatui.Server.start_link(
           mod: TestApp,
+          name: nil,
           test_pid: self(),
           test_mode: {80, 24}
         )
@@ -58,6 +59,7 @@ defmodule ExRatatui.ServerTest do
       {:ok, pid} =
         ExRatatui.Server.start_link(
           mod: TestApp,
+          name: nil,
           test_pid: self(),
           test_mode: {80, 24}
         )
@@ -74,6 +76,7 @@ defmodule ExRatatui.ServerTest do
       {:ok, pid} =
         ExRatatui.Server.start_link(
           mod: TestApp,
+          name: nil,
           test_pid: self(),
           test_mode: {80, 24}
         )
@@ -91,6 +94,7 @@ defmodule ExRatatui.ServerTest do
       {:ok, pid} =
         ExRatatui.Server.start_link(
           mod: TestApp,
+          name: nil,
           test_pid: self(),
           test_mode: {80, 24}
         )
