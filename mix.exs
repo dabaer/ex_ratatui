@@ -62,8 +62,9 @@ defmodule ExRatatui.MixProject do
 
   defp docs do
     [
-      main: "ExRatatui",
+      main: "readme",
       extras: [
+        "README.md": [title: "Overview"],
         "CHANGELOG.md": [title: "Changelog"]
       ],
       groups_for_modules: [

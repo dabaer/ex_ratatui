@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Function specs (`@spec`) for all public API functions
 - Dialyzer static analysis in CI
 
+### Changed
+
+- Extracted `Event.Key`, `Event.Mouse`, `Event.Resize` and `Layout.Rect` into their own files
+
+### Fixed
+
+- `ExRatatui.Server.start_link/1` now supports `name: nil` to start without process registration
+
 ## [0.2.0] - 2026-02-21
 
 ### Changed
