@@ -44,6 +44,7 @@ defmodule ExRatatui.TestBackendTest do
 
     test "paragraph with centered alignment" do
       terminal = ExRatatui.init_test_terminal(20, 3)
+      on_exit(fn -> Native.restore_terminal(terminal) end)
 
       paragraph = %Paragraph{text: "Hi", alignment: :center}
       rect = %Rect{x: 0, y: 0, width: 20, height: 3}
@@ -55,8 +56,6 @@ defmodule ExRatatui.TestBackendTest do
       [first_line | _] = String.split(content, "\n")
       assert String.starts_with?(first_line, " ")
       assert first_line =~ "Hi"
-
-      Native.restore_terminal(terminal)
     end
 
     test "multiline paragraph", %{terminal: terminal} do

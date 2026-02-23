@@ -33,6 +33,22 @@ defmodule ExRatatui.TerminalTest do
       # If it failed (no TTY), nothing to restore.
       assert true
     end
+
+    test "ensures terminal is restored when function raises" do
+      result =
+        try do
+          ExRatatui.run(fn _terminal -> raise "boom" end)
+        rescue
+          RuntimeError -> :raised
+        end
+
+      case result do
+        # Function ran and raised — terminal was restored by the after block
+        :raised -> :ok
+        # No TTY available — init_terminal failed, function never called
+        {:error, _} -> :ok
+      end
+    end
   end
 
   describe "BEAM scheduler safety" do

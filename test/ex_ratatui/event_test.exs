@@ -2,9 +2,9 @@ defmodule ExRatatui.EventTest do
   use ExUnit.Case, async: true
 
   describe "poll_event/1" do
-    test "returns nil (timeout) or {:error, _} (no TTY)" do
+    test "returns nil (timeout), an event, or {:error, _} (no TTY)" do
       result = ExRatatui.poll_event(10)
-      assert result == nil or match?({:error, _}, result)
+      assert valid_poll_result?(result)
     end
 
     test "does not block the BEAM (runs on dirty scheduler)" do
@@ -27,7 +27,7 @@ defmodule ExRatatui.EventTest do
         for _ <- 1..4 do
           Task.async(fn ->
             result = ExRatatui.poll_event(10)
-            assert result == nil or match?({:error, _}, result)
+            assert valid_poll_result?(result)
             :ok
           end)
         end
@@ -36,4 +36,11 @@ defmodule ExRatatui.EventTest do
       assert Enum.all?(results, &(&1 == :ok))
     end
   end
+
+  defp valid_poll_result?(nil), do: true
+  defp valid_poll_result?({:error, _}), do: true
+  defp valid_poll_result?(%ExRatatui.Event.Key{}), do: true
+  defp valid_poll_result?(%ExRatatui.Event.Mouse{}), do: true
+  defp valid_poll_result?(%ExRatatui.Event.Resize{}), do: true
+  defp valid_poll_result?(_), do: false
 end

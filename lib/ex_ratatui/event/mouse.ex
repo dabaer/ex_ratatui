@@ -23,10 +23,10 @@ defmodule ExRatatui.Event.Mouse do
   """
 
   @type t :: %__MODULE__{
-          kind: String.t() | nil,
-          button: String.t() | nil,
-          x: non_neg_integer() | nil,
-          y: non_neg_integer() | nil,
+          kind: String.t(),
+          button: String.t(),
+          x: non_neg_integer(),
+          y: non_neg_integer(),
           modifiers: [String.t()]
         }
 

@@ -75,7 +75,13 @@ defmodule ExRatatui do
         try do
           fun.(terminal_ref)
         after
-          Native.restore_terminal(terminal_ref)
+          try do
+            Native.restore_terminal(terminal_ref)
+          rescue
+            e ->
+              require Logger
+              Logger.warning("Failed to restore terminal: #{Exception.message(e)}")
+          end
         end
     end
   end
@@ -255,11 +261,7 @@ defmodule ExRatatui do
   defp maybe_put_block(map, nil), do: map
   defp maybe_put_block(map, %Block{} = b), do: Map.put(map, "block", encode_block(b))
 
-  defp encode_constraint({:percentage, n}), do: %{"type" => "percentage", "value" => n}
-  defp encode_constraint({:length, n}), do: %{"type" => "length", "value" => n}
-  defp encode_constraint({:min, n}), do: %{"type" => "min", "value" => n}
-  defp encode_constraint({:max, n}), do: %{"type" => "max", "value" => n}
-  defp encode_constraint({:ratio, num, den}), do: %{"type" => "ratio", "num" => num, "den" => den}
+  defp encode_constraint(constraint), do: ExRatatui.Layout.encode_constraint(constraint)
 
   defp encode_style(%Style{} = s) do
     style = %{"modifiers" => Enum.map(s.modifiers, &Atom.to_string/1)}

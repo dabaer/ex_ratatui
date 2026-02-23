@@ -32,6 +32,65 @@ defmodule ExRatatui.ServerTest do
     end
   end
 
+  defmodule StopOnEventApp do
+    use ExRatatui.App
+
+    @impl true
+    def mount(opts) do
+      test_pid = Keyword.fetch!(opts, :test_pid)
+      {:ok, %{test_pid: test_pid}}
+    end
+
+    @impl true
+    def render(_state, _frame), do: []
+
+    @impl true
+    def handle_event(%{stop: true}, state), do: {:stop, state}
+    def handle_event(_event, state), do: {:noreply, state}
+  end
+
+  defmodule StopOnInfoApp do
+    use ExRatatui.App
+
+    @impl true
+    def mount(opts) do
+      test_pid = Keyword.fetch!(opts, :test_pid)
+      {:ok, %{test_pid: test_pid}}
+    end
+
+    @impl true
+    def render(_state, _frame), do: []
+
+    @impl true
+    def handle_event(_event, state), do: {:noreply, state}
+
+    @impl true
+    def handle_info(:stop_now, state), do: {:stop, state}
+    def handle_info(_msg, state), do: {:noreply, state}
+  end
+
+  defmodule TerminateApp do
+    use ExRatatui.App
+
+    @impl true
+    def mount(opts) do
+      test_pid = Keyword.fetch!(opts, :test_pid)
+      {:ok, %{test_pid: test_pid}}
+    end
+
+    @impl true
+    def render(_state, _frame), do: []
+
+    @impl true
+    def handle_event(_event, state), do: {:noreply, state}
+
+    @impl true
+    def terminate(reason, state) do
+      send(state.test_pid, {:terminated, reason})
+      :ok
+    end
+  end
+
   describe "start_link/1" do
     test "starts the server and calls mount" do
       {:ok, pid} =
@@ -98,6 +157,37 @@ defmodule ExRatatui.ServerTest do
       assert_receive {:info, {:custom_message, "hello"}}, 1000
 
       GenServer.stop(pid)
+    end
+
+    test "handle_info returning {:stop, state} shuts down the server" do
+      {:ok, pid} =
+        ExRatatui.Server.start_link(
+          mod: StopOnInfoApp,
+          name: nil,
+          test_pid: self(),
+          test_mode: {80, 24}
+        )
+
+      ref = Process.monitor(pid)
+      send(pid, :stop_now)
+      assert_receive {:DOWN, ^ref, :process, ^pid, :normal}, 1000
+    end
+  end
+
+  describe "terminate callback" do
+    test "terminate/2 is called on normal stop" do
+      {:ok, pid} =
+        ExRatatui.Server.start_link(
+          mod: TerminateApp,
+          name: nil,
+          test_pid: self(),
+          test_mode: {80, 24}
+        )
+
+      ref = Process.monitor(pid)
+      GenServer.stop(pid)
+      assert_receive {:DOWN, ^ref, :process, ^pid, :normal}, 1000
+      assert_receive {:terminated, :normal}, 1000
     end
   end
 end

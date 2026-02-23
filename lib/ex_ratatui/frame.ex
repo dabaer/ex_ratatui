@@ -11,9 +11,9 @@ defmodule ExRatatui.Frame do
   """
 
   @type t :: %__MODULE__{
-          width: non_neg_integer() | nil,
-          height: non_neg_integer() | nil
+          width: non_neg_integer(),
+          height: non_neg_integer()
         }
 
-  defstruct [:width, :height]
+  defstruct width: 0, height: 0
 end

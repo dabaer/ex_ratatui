@@ -9,7 +9,7 @@ Elixir bindings for the Rust [ratatui](https://ratatui.rs) terminal UI library, 
 
 Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, and styling system — without blocking the BEAM.
 
-![ExRatatui Demo](assets/demo.gif)
+![ExRatatui Demo](https://raw.githubusercontent.com/mcass19/ex_ratatui/main/assets/demo.gif)
 
 ## Features
 
@@ -306,7 +306,7 @@ end
 %Style{fg: {:indexed, 42}}
 
 # Modifiers
-%Style{modifiers: [:bold, :italic, :underlined]}
+%Style{modifiers: [:bold, :dim, :italic, :underlined, :crossed_out, :reversed]}
 ```
 
 ## Testing

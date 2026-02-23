@@ -50,6 +50,8 @@ defmodule ExRatatui.App do
       which gives ~60fps). The poll runs on the BEAM's DirtyIo scheduler so it
       never blocks normal processes. Lower values increase responsiveness but
       use more CPU; higher values reduce CPU but add input latency.
+    * `:test_mode` - `{width, height}` tuple to use a headless test terminal
+      instead of the real terminal. Enables `async: true` tests without a TTY.
 
   ## Callbacks
 

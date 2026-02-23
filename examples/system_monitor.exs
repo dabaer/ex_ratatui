@@ -258,7 +258,7 @@ defmodule SystemMonitor do
 
   defp collect_stats(prev \\ %{}) do
     %{
-      hostname: Map.get(prev, :hostname, read_hostname()),
+      hostname: Map.get_lazy(prev, :hostname, &read_hostname/0),
       cpu_temp: read_cpu_temp(),
       memory: read_memory(),
       disk: read_disk(),

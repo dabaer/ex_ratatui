@@ -111,6 +111,7 @@ defmodule ExRatatui.Server do
     :ok
   end
 
+  @impl true
   def terminate(_reason, _state), do: :ok
 
   ## Private helpers
@@ -156,7 +157,10 @@ defmodule ExRatatui.Server do
     state
   rescue
     e ->
-      Logger.error("ExRatatui render error: #{Exception.message(e)}")
+      Logger.error(
+        "ExRatatui render error: #{Exception.message(e)}\n#{Exception.format_stacktrace(__STACKTRACE__)}"
+      )
+
       state
   end
 

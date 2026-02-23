@@ -11,9 +11,9 @@ defmodule ExRatatui.FrameTest do
     assert frame.height == 24
   end
 
-  test "frame struct defaults to nil" do
+  test "frame struct defaults to zero" do
     frame = %Frame{}
-    assert frame.width == nil
-    assert frame.height == nil
+    assert frame.width == 0
+    assert frame.height == 0
   end
 end

@@ -80,9 +80,7 @@ pub fn decode_constraint(term: Term) -> Result<Constraint, Error> {
                 .ok_or_else(|| Error::Term(Box::new("ratio missing 'den'")))?
                 .decode()?;
             if den == 0 {
-                return Err(Error::Term(Box::new(
-                    "ratio denominator must not be zero",
-                )));
+                return Err(Error::Term(Box::new("ratio denominator must not be zero")));
             }
             Ok(Constraint::Ratio(num, den))
         }

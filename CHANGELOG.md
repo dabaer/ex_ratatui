@@ -21,11 +21,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Expanded `ExRatatui` moduledoc with quick start, core API overview, and cross-references
+- `Event.Mouse` typespec fields are now non-nullable to match actual NIF output
+- README demo GIF now uses an absolute URL so it renders on Hex.pm
+- README modifiers list now shows all six supported modifiers
+- Documented `:test_mode` option in `ExRatatui.App` for headless testing
 
 ### Docs
 
 - Clarified `system_monitor.exs` is Linux/Nerves only in README
 - Removed unnecessary `Elixir.` prefix from `List` calls in `task_manager.exs` example
+- Fixed `system_monitor.exs` to cache hostname between refreshes with `Map.get_lazy/3`
+- Pinned CI workflow to `actions/checkout@v4`
+- Added server tests for `{:stop, state}` from `handle_info/2` and `terminate/2` callback
 
 ## [0.4.0] - 2026-02-23
 
