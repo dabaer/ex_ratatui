@@ -67,15 +67,24 @@ where
     Ok(atoms::ok())
 }
 
-#[rustler::nif]
+#[rustler::nif(schedule = "DirtyIo")]
 fn init_terminal() -> Result<ResourceArc<TerminalResource>, Error> {
     terminal::enable_raw_mode().map_err(|e| Error::Term(Box::new(format!("{e}"))))?;
-    std::io::stdout()
-        .execute(EnterAlternateScreen)
-        .map_err(|e| Error::Term(Box::new(format!("{e}"))))?;
+
+    if let Err(e) = std::io::stdout().execute(EnterAlternateScreen) {
+        let _ = terminal::disable_raw_mode();
+        return Err(Error::Term(Box::new(format!("{e}"))));
+    }
 
     let backend = CrosstermBackend::new(std::io::stdout());
-    let terminal = Terminal::new(backend).map_err(|e| Error::Term(Box::new(format!("{e}"))))?;
+    let terminal = match Terminal::new(backend) {
+        Ok(t) => t,
+        Err(e) => {
+            let _ = std::io::stdout().execute(LeaveAlternateScreen);
+            let _ = terminal::disable_raw_mode();
+            return Err(Error::Term(Box::new(format!("{e}"))));
+        }
+    };
 
     Ok(ResourceArc::new(TerminalResource {
         terminal: Mutex::new(Some(AnyTerminal::Crossterm(terminal))),
@@ -83,7 +92,7 @@ fn init_terminal() -> Result<ResourceArc<TerminalResource>, Error> {
     }))
 }
 
-#[rustler::nif]
+#[rustler::nif(schedule = "DirtyIo")]
 fn restore_terminal(resource: ResourceArc<TerminalResource>) -> Result<Atom, Error> {
     let mut guard = resource
         .terminal
@@ -108,7 +117,7 @@ fn restore_terminal(resource: ResourceArc<TerminalResource>) -> Result<Atom, Err
     Ok(atoms::ok())
 }
 
-#[rustler::nif]
+#[rustler::nif(schedule = "DirtyIo")]
 fn terminal_size() -> Result<(u16, u16), Error> {
     terminal::size().map_err(|e| Error::Term(Box::new(format!("{e}"))))
 }

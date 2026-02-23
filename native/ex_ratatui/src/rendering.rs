@@ -24,7 +24,7 @@ struct RenderCommand {
     area: Rect,
 }
 
-#[rustler::nif]
+#[rustler::nif(schedule = "DirtyIo")]
 fn draw_frame(resource: ResourceArc<TerminalResource>, commands: Term) -> Result<Atom, Error> {
     let command_list: Vec<(Term, Term)> = commands.decode()?;
     let render_commands = decode_commands(&command_list)?;
