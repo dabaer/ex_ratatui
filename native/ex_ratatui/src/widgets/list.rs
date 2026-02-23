@@ -15,7 +15,11 @@ pub struct ListData {
 }
 
 pub fn render(frame: &mut Frame, data: &ListData, area: Rect) {
-    let items: Vec<ListItem> = data.items.iter().map(|s| ListItem::new(s.as_str())).collect();
+    let items: Vec<ListItem> = data
+        .items
+        .iter()
+        .map(|s| ListItem::new(s.as_str()))
+        .collect();
 
     let mut list = List::new(items)
         .style(data.style)

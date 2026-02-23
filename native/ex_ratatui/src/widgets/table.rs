@@ -33,7 +33,10 @@ pub fn render(frame: &mut Frame, data: &TableData, area: Rect) {
         .column_spacing(data.column_spacing);
 
     if let Some(ref header_cells) = data.header {
-        let cells: Vec<Cell> = header_cells.iter().map(|s| Cell::from(s.as_str())).collect();
+        let cells: Vec<Cell> = header_cells
+            .iter()
+            .map(|s| Cell::from(s.as_str()))
+            .collect();
         table = table.header(Row::new(cells));
     }
 

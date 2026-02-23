@@ -15,11 +15,7 @@ fn layout_split(
     let dir = match direction.as_str() {
         "horizontal" => Direction::Horizontal,
         "vertical" => Direction::Vertical,
-        other => {
-            return Err(Error::Term(Box::new(format!(
-                "unknown direction: {other}"
-            ))))
-        }
+        other => return Err(Error::Term(Box::new(format!("unknown direction: {other}")))),
     };
 
     let constraints: Vec<Constraint> = constraints_term
@@ -32,7 +28,10 @@ fn layout_split(
         .constraints(constraints)
         .split(area);
 
-    Ok(chunks.iter().map(|r| (r.x, r.y, r.width, r.height)).collect())
+    Ok(chunks
+        .iter()
+        .map(|r| (r.x, r.y, r.width, r.height))
+        .collect())
 }
 
 pub fn decode_constraint(term: Term) -> Result<Constraint, Error> {

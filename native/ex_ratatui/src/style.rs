@@ -105,9 +105,7 @@ pub fn parse_modifier(name: &str) -> Result<Modifier, Error> {
         "underlined" => Ok(Modifier::UNDERLINED),
         "crossed_out" => Ok(Modifier::CROSSED_OUT),
         "reversed" => Ok(Modifier::REVERSED),
-        other => Err(Error::Term(Box::new(format!(
-            "unknown modifier: {other}"
-        )))),
+        other => Err(Error::Term(Box::new(format!("unknown modifier: {other}")))),
     }
 }
 

@@ -110,9 +110,7 @@ pub fn parse_borders(names: &[String]) -> Result<Borders, Error> {
             "right" => Borders::RIGHT,
             "bottom" => Borders::BOTTOM,
             "left" => Borders::LEFT,
-            other => {
-                return Err(Error::Term(Box::new(format!("unknown border: {other}"))))
-            }
+            other => return Err(Error::Term(Box::new(format!("unknown border: {other}")))),
         };
     }
     Ok(borders)

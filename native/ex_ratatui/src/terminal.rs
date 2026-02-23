@@ -69,8 +69,7 @@ fn restore_terminal() -> Result<Atom, Error> {
 
     match guard.take() {
         Some(AnyTerminal::Crossterm(_)) => {
-            terminal::disable_raw_mode()
-                .map_err(|e| Error::Term(Box::new(format!("{e}"))))?;
+            terminal::disable_raw_mode().map_err(|e| Error::Term(Box::new(format!("{e}"))))?;
             std::io::stdout()
                 .execute(LeaveAlternateScreen)
                 .map_err(|e| Error::Term(Box::new(format!("{e}"))))?;
@@ -122,11 +121,7 @@ fn get_buffer_content() -> Result<String, Error> {
             let mut lines = Vec::new();
             for y in 0..buf.area.height {
                 let line: String = (0..buf.area.width)
-                    .map(|x| {
-                        buf.cell((x, y))
-                            .map_or(" ", |c| c.symbol())
-                            .to_string()
-                    })
+                    .map(|x| buf.cell((x, y)).map_or(" ", |c| c.symbol()).to_string())
                     .collect();
                 lines.push(line.trim_end().to_string());
             }

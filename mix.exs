@@ -13,6 +13,7 @@ defmodule ExRatatui.MixProject do
       version: @version,
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
       deps: deps(),
       package: package(),
       name: "ExRatatui",
@@ -29,6 +30,16 @@ defmodule ExRatatui.MixProject do
   def application do
     [
       extra_applications: [:logger]
+    ]
+  end
+
+  defp aliases do
+    [
+      "rust.check": [
+        "cmd --cd native/ex_ratatui cargo fmt --check",
+        "cmd --cd native/ex_ratatui cargo clippy -- -D warnings",
+        "cmd --cd native/ex_ratatui cargo test"
+      ]
     ]
   end
 

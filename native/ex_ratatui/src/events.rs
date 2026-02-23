@@ -21,8 +21,7 @@ pub enum NifEvent {
 fn poll_event(timeout_ms: u64) -> Result<Option<NifEvent>, Error> {
     let timeout = Duration::from_millis(timeout_ms);
 
-    let available =
-        event::poll(timeout).map_err(|e| Error::Term(Box::new(format!("{e}"))))?;
+    let available = event::poll(timeout).map_err(|e| Error::Term(Box::new(format!("{e}"))))?;
 
     if !available {
         return Ok(None);
