@@ -75,6 +75,7 @@ defmodule ExRatatui.MixProject do
   defp docs do
     [
       main: "readme",
+      source_ref: "v#{@version}",
       extras: [
         "README.md": [title: "Overview"],
         "CONTRIBUTING.md": [title: "Contributing"],

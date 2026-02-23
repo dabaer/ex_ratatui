@@ -1,8 +1,44 @@
 defmodule ExRatatui do
   @moduledoc """
-  Ratatui TUI library bindings for Elixir.
+  Elixir bindings for the Rust [ratatui](https://ratatui.rs) terminal UI library.
 
-  Provides terminal UI capabilities via Rust NIFs wrapping the ratatui crate.
+  This module provides the core API for building terminal UIs: initializing
+  the terminal, drawing widgets, and polling for events — all via Rust NIFs
+  that run on the BEAM's DirtyIo scheduler.
+
+  ## Quick start
+
+      ExRatatui.run(fn terminal ->
+        {w, h} = ExRatatui.terminal_size()
+        paragraph = %ExRatatui.Widgets.Paragraph{text: "Hello!"}
+        rect = %ExRatatui.Layout.Rect{x: 0, y: 0, width: w, height: h}
+
+        ExRatatui.draw(terminal, [{paragraph, rect}])
+        ExRatatui.poll_event(60_000)
+      end)
+
+  ## Core functions
+
+    * `run/1` — initialize the terminal, run a function, restore on exit
+    * `draw/2` — render a list of `{widget, rect}` tuples in a single frame
+    * `poll_event/1` — non-blocking event polling (keyboard, mouse, resize)
+    * `terminal_size/0` — current terminal dimensions
+
+  ## OTP apps
+
+  For supervised TUI applications, see `ExRatatui.App` — a behaviour with
+  LiveView-inspired callbacks (`mount/1`, `render/2`, `handle_event/2`).
+
+  ## Widgets
+
+  See `ExRatatui.Widgets.Paragraph`, `ExRatatui.Widgets.Block`,
+  `ExRatatui.Widgets.List`, `ExRatatui.Widgets.Table`, and
+  `ExRatatui.Widgets.Gauge`.
+
+  ## Testing
+
+  Use `init_test_terminal/2` and `get_buffer_content/1` for headless
+  rendering verification in CI — no TTY required.
   """
 
   alias ExRatatui.Native

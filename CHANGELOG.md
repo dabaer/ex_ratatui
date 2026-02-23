@@ -12,7 +12,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `init_terminal` NIF now cleans up raw mode and alternate screen on partial initialization failure
 - All I/O-bound NIFs (`init_terminal`, `restore_terminal`, `draw_frame`, `terminal_size`) now run on the DirtyIo scheduler to avoid blocking normal BEAM schedulers
 - `encode_constraint/1` is no longer exposed as a public function in `ExRatatui.Layout`
-- `ExRatatui.App.render/2` callback typespec narrowed from `term()` to `ExRatatui.widget()` for proper Dialyzer coverage
+- `App.render/2` callback typespec narrowed from `term()` to `ExRatatui.widget()` for proper Dialyzer coverage
+- `Constraint::Ratio` with denominator zero now returns an error instead of panicking
+- `Gauge` ratio now validates the value is finite, preventing a panic on NaN input
+- `App.mount/1` callback typespec now includes `{:error, reason}` return
+- HexDocs "View Source" links now point to the correct version tag
+
+### Changed
+
+- Expanded `ExRatatui` moduledoc with quick start, core API overview, and cross-references
+
+### Docs
+
+- Clarified `system_monitor.exs` is Linux/Nerves only in README
+- Removed unnecessary `Elixir.` prefix from `List` calls in `task_manager.exs` example
 
 ## [0.4.0] - 2026-02-23
 

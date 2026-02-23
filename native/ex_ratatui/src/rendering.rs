@@ -222,6 +222,12 @@ fn decode_gauge(map: &HashMap<String, Term>) -> Result<GaugeData, Error> {
         .ok_or_else(|| Error::Term(Box::new("gauge missing 'ratio'")))?
         .decode()?;
 
+    if !ratio.is_finite() {
+        return Err(Error::Term(Box::new(
+            "gauge ratio must be a finite number",
+        )));
+    }
+
     let label: Option<String> = match map.get("label") {
         Some(term) => Some(term.decode()?),
         None => None,

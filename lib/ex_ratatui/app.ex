@@ -53,7 +53,8 @@ defmodule ExRatatui.App do
 
   ## Callbacks
 
-    * `mount/1` — Called once on startup with options. Return `{:ok, initial_state}`.
+    * `mount/1` — Called once on startup with options. Return `{:ok, initial_state}`
+      or `{:error, reason}` to abort startup.
     * `render/2` — Called after every state change. Receives state and a
       `%ExRatatui.Frame{}` with terminal dimensions. Return a list of
       `{widget, rect}` tuples.
@@ -68,7 +69,7 @@ defmodule ExRatatui.App do
 
   @type state :: term()
 
-  @callback mount(opts :: keyword()) :: {:ok, state()}
+  @callback mount(opts :: keyword()) :: {:ok, state()} | {:error, reason :: term()}
   @callback render(state(), ExRatatui.Frame.t()) :: [
               {ExRatatui.widget(), ExRatatui.Layout.Rect.t()}
             ]
