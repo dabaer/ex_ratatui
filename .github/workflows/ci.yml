@@ -69,7 +69,11 @@ jobs:
       - run: mix dialyzer --format github
         if: ${{ matrix.lint }}
 
+      - run: mix rust.check
+        if: ${{ matrix.lint }}
+
       - name: Run cargo tests
+        if: ${{ ! matrix.lint }}
         run: cargo test --manifest-path native/ex_ratatui/Cargo.toml
 
       - run: mix test
