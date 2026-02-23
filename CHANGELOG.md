@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-02-23
+
 ### Changed
 
 - **BREAKING**: Terminal state is now per-process via Rust ResourceArc instead of a global mutex
@@ -22,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Comprehensive API documentation: all key codes, mouse events, colors, modifiers, and App options
 - Doctests for Layout, Style, Frame, all widgets, and test backend
-- CONTRIBUTING.md with development setup, testing, and widget contribution guide
+- CONTRIBUTING.md with development setup
 
 ## [0.3.0] - 2026-02-23
 
@@ -79,7 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Precompiled NIFs:** Via `rustler_precompiled` for Linux, macOS, and Windows (x86_64 and aarch64) — no Rust toolchain required
 - **Examples:** `hello_world.exs` (minimal display), `counter.exs` (interactive key events), `counter_app.exs` (App-based counter), `task_manager.exs` (full app with all widgets), and `examples/task_manager/` (supervised Ecto + SQLite CRUD app)
 
-[Unreleased]: https://github.com/mcass19/ex_ratatui/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/mcass19/ex_ratatui/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/mcass19/ex_ratatui/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/mcass19/ex_ratatui/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/mcass19/ex_ratatui/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/mcass19/ex_ratatui/compare/v0.1.0...v0.1.1
