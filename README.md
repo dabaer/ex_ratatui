@@ -30,7 +30,7 @@ Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, 
 | `hello_world.exs` | `mix run examples/hello_world.exs` | Minimal paragraph display |
 | `counter.exs` | `mix run examples/counter.exs` | Interactive counter with key events |
 | `counter_app.exs` | `mix run examples/counter_app.exs` | Counter using `ExRatatui.App` behaviour |
-| `system_monitor.exs` | `mix run examples/system_monitor.exs` | System dashboard (CPU, memory, disk, network, BEAM stats) |
+| `system_monitor.exs` | `mix run examples/system_monitor.exs` | Linux system dashboard (CPU, memory, disk, network, BEAM stats) |
 | `task_manager.exs` | `mix run examples/task_manager.exs` | Full task manager with all widgets |
 | `task_manager/` | See [README](https://github.com/mcass19/ex_ratatui/tree/main/examples/task_manager) | Supervised Ecto + SQLite CRUD app |
 
@@ -327,7 +327,7 @@ end
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](https://github.com/mcass19/ex_ratatui/blob/main/CONTRIBUTING.md) for development setup, how to add widgets, and PR guidelines.
+Contributions are welcome! See [CONTRIBUTING.md](https://github.com/mcass19/ex_ratatui/blob/main/CONTRIBUTING.md) for development setup and PR guidelines.
 
 ## License
 
