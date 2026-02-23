@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `init_terminal` NIF now cleans up raw mode and alternate screen on partial initialization failure
+- All I/O-bound NIFs (`init_terminal`, `restore_terminal`, `draw_frame`, `terminal_size`) now run on the DirtyIo scheduler to avoid blocking normal BEAM schedulers
+- `encode_constraint/1` is no longer exposed as a public function in `ExRatatui.Layout`
+- `ExRatatui.App.render/2` callback typespec narrowed from `term()` to `ExRatatui.widget()` for proper Dialyzer coverage
+
 ## [0.4.0] - 2026-02-23
 
 ### Changed
