@@ -32,7 +32,7 @@ Build rich terminal UIs in Elixir with ratatui's layout engine, widget library, 
 | `counter_app.exs` | `mix run examples/counter_app.exs` | Counter using `ExRatatui.App` behaviour |
 | `system_monitor.exs` | `mix run examples/system_monitor.exs` | System dashboard (CPU, memory, disk, network, BEAM stats) |
 | `task_manager.exs` | `mix run examples/task_manager.exs` | Full task manager with all widgets |
-| `task_manager/` | See [README](examples/task_manager/README.md) | Supervised Ecto + SQLite CRUD app |
+| `task_manager/` | See [README](https://github.com/mcass19/ex_ratatui/tree/main/examples/task_manager) | Supervised Ecto + SQLite CRUD app |
 
 ## Installation
 
@@ -152,7 +152,7 @@ Supervisor.start_link(children, strategy: :one_for_one)
 | `handle_info/2` | Called for non-terminal messages (e.g., PubSub). Optional — defaults to `{:noreply, state}` |
 | `terminate/2` | Called on shutdown with reason and final state. Optional — default is a no-op |
 
-See the [task_manager example](examples/task_manager/) for a full Ecto-backed app using this behaviour.
+See the [task_manager example](https://github.com/mcass19/ex_ratatui/tree/main/examples/task_manager) for a full Ecto-backed app using this behaviour.
 
 ## How It Works
 
@@ -338,4 +338,4 @@ To compile the NIF from source, install the [Rust toolchain](https://rustup.rs/)
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT — see [LICENSE](https://github.com/mcass19/ex_ratatui/blob/main/LICENSE) for details.

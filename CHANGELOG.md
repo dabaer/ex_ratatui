@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- `ExRatatui.Server.start_link/1` now supports `name: nil` to start without process registration
+- Server `start_link/1` now supports `name: nil` to start without process registration
 - App-based TUI processes hanging on macOS — the event poll loop now delegates the timeout to the NIF on the DirtyIo scheduler instead of using `Process.send_after/3`, which was causing the GenServer to stop processing messages
 
 ## [0.2.0] - 2026-02-21
