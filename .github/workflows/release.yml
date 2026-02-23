@@ -62,8 +62,19 @@ jobs:
           name: ${{ steps.build-crate.outputs.file-name }}
           path: ${{ steps.build-crate.outputs.file-path }}
 
+  publish:
+    name: Publish release
+    needs: build_release
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
       - name: Publish archives and packages
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            ${{ steps.build-crate.outputs.file-path }}
+          files: artifacts/*
