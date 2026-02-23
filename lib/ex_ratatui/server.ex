@@ -63,10 +63,10 @@ defmodule ExRatatui.Server do
     result =
       case ExRatatui.poll_event(state.poll_interval) do
         nil ->
-          {:continue, state}
+          {:continue, state, false}
 
         {:error, _} ->
-          {:continue, state}
+          {:continue, state, false}
 
         event ->
           dispatch_event(state, event)
@@ -76,8 +76,8 @@ defmodule ExRatatui.Server do
       {:stop, state} ->
         {:stop, :normal, state}
 
-      {:continue, state} ->
-        state = do_render(state)
+      {:continue, state, render?} ->
+        state = if render?, do: do_render(state), else: state
         send(self(), :poll)
         {:noreply, state}
     end
@@ -121,7 +121,7 @@ defmodule ExRatatui.Server do
   defp dispatch_event(state, event) do
     case state.mod.handle_event(event, state.user_state) do
       {:noreply, new_user_state} ->
-        {:continue, %{state | user_state: new_user_state}}
+        {:continue, %{state | user_state: new_user_state}, true}
 
       {:stop, new_user_state} ->
         {:stop, %{state | user_state: new_user_state}}
