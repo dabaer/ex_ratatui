@@ -95,7 +95,7 @@ ExRatatui.run(fn terminal ->
 end)
 ```
 
-Run it with `mix run examples/hello_world.exs`.
+Try the [examples](https://github.com/mcass19/ex_ratatui/tree/main/examples) for more, e.g. `mix run examples/hello_world.exs`.
 
 ## OTP App Behaviour
 

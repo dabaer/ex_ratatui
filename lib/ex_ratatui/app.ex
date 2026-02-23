@@ -69,7 +69,9 @@ defmodule ExRatatui.App do
   @type state :: term()
 
   @callback mount(opts :: keyword()) :: {:ok, state()}
-  @callback render(state(), ExRatatui.Frame.t()) :: [{term(), ExRatatui.Layout.Rect.t()}]
+  @callback render(state(), ExRatatui.Frame.t()) :: [
+              {ExRatatui.widget(), ExRatatui.Layout.Rect.t()}
+            ]
   @callback handle_event(
               ExRatatui.Event.Key.t() | ExRatatui.Event.Mouse.t() | ExRatatui.Event.Resize.t(),
               state()
