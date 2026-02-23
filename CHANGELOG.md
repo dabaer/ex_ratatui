@@ -7,16 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-02-23
+
 ### Fixed
 
 - `init_terminal` NIF now cleans up raw mode and alternate screen on partial initialization failure
 - All I/O-bound NIFs (`init_terminal`, `restore_terminal`, `draw_frame`, `terminal_size`) now run on the DirtyIo scheduler to avoid blocking normal BEAM schedulers
-- `encode_constraint/1` is no longer exposed as a public function in `ExRatatui.Layout`
 - `App.render/2` callback typespec narrowed from `term()` to `ExRatatui.widget()` for proper Dialyzer coverage
 - `Constraint::Ratio` with denominator zero now returns an error instead of panicking
 - `Gauge` ratio now validates the value is finite, preventing a panic on NaN input
 - `App.mount/1` callback typespec now includes `{:error, reason}` return
 - HexDocs "View Source" links now point to the correct version tag
+- `ExRatatui.run/1` `after` block no longer masks the original exception if terminal restore also fails
+- `ExRatatui.Server` render errors now log the full stacktrace for easier debugging
+- Added missing `@impl true` on fallback `terminate/2` clause in `ExRatatui.Server`
+- `ExRatatui.Frame` struct defaults to `width: 0, height: 0` instead of `nil` (typespec now matches actual usage)
+- Deduplicated `encode_constraint/1` — `ExRatatui.Layout` is now the single source of truth
+- Fixed flaky `poll_event` tests that failed when terminal events arrived during the test run
 
 ### Changed
 
@@ -108,7 +115,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Precompiled NIFs:** Via `rustler_precompiled` for Linux, macOS, and Windows (x86_64 and aarch64) — no Rust toolchain required
 - **Examples:** `hello_world.exs` (minimal display), `counter.exs` (interactive key events), `counter_app.exs` (App-based counter), `task_manager.exs` (full app with all widgets), and `examples/task_manager/` (supervised Ecto + SQLite CRUD app)
 
-[Unreleased]: https://github.com/mcass19/ex_ratatui/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/mcass19/ex_ratatui/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/mcass19/ex_ratatui/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/mcass19/ex_ratatui/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/mcass19/ex_ratatui/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/mcass19/ex_ratatui/compare/v0.1.1...v0.2.0
