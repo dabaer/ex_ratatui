@@ -77,6 +77,7 @@ defmodule ExRatatui.MixProject do
       main: "readme",
       extras: [
         "README.md": [title: "Overview"],
+        "CONTRIBUTING.md": [title: "Contributing"],
         "CHANGELOG.md": [title: "Changelog"]
       ],
       groups_for_modules: [

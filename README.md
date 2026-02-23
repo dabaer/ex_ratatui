@@ -325,16 +325,9 @@ test "renders a paragraph" do
 end
 ```
 
-## Development
+## Contributing
 
-```sh
-git clone https://github.com/mcass19/ex_ratatui.git
-cd ex_ratatui
-mix deps.get
-mix test
-```
-
-To compile the NIF from source, install the [Rust toolchain](https://rustup.rs/) and set `EX_RATATUI_BUILD=true`.
+Contributions are welcome! See [CONTRIBUTING.md](https://github.com/mcass19/ex_ratatui/blob/main/CONTRIBUTING.md) for development setup, how to add widgets, and PR guidelines.
 
 ## License
 

@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Terminal is automatically restored when the terminal reference is garbage collected (crash safety)
 - Test terminal instances are now independent, enabling `async: true` for rendering tests
 
+### Added
+
+- Comprehensive API documentation: all key codes, mouse events, colors, modifiers, and App options
+- Doctests for Layout, Style, Frame, all widgets, and test backend
+- CONTRIBUTING.md with development setup, testing, and widget contribution guide
+
 ## [0.3.0] - 2026-02-23
 
 ### Added
