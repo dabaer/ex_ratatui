@@ -11,13 +11,33 @@ defmodule ExRatatui.Widgets.Paragraph do
     * `:wrap` - `true` to wrap text at widget boundary
     * `:scroll` - `{vertical, horizontal}` scroll offset
 
-  ## Example
+  ## Examples
 
-      %Paragraph{
-        text: "Hello, world!",
-        style: %Style{fg: :green, modifiers: [:bold]},
+      iex> %ExRatatui.Widgets.Paragraph{text: "Hello!", alignment: :center}
+      %ExRatatui.Widgets.Paragraph{
+        text: "Hello!",
+        style: %ExRatatui.Style{},
+        block: nil,
         alignment: :center,
-        block: %Block{title: "Greeting", borders: [:all]}
+        wrap: false,
+        scroll: {0, 0}
+      }
+
+      iex> alias ExRatatui.Widgets.{Paragraph, Block}
+      iex> alias ExRatatui.Style
+      iex> %Paragraph{
+      ...>   text: "Hello, world!",
+      ...>   style: %Style{fg: :green, modifiers: [:bold]},
+      ...>   alignment: :center,
+      ...>   block: %Block{title: "Greeting", borders: [:all]}
+      ...> }
+      %ExRatatui.Widgets.Paragraph{
+        text: "Hello, world!",
+        style: %ExRatatui.Style{fg: :green, modifiers: [:bold]},
+        block: %ExRatatui.Widgets.Block{title: "Greeting", borders: [:all]},
+        alignment: :center,
+        wrap: false,
+        scroll: {0, 0}
       }
   """
 

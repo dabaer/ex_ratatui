@@ -17,6 +17,7 @@ defmodule ExRatatui.MixProject do
       deps: deps(),
       package: package(),
       name: "ExRatatui",
+      homepage_url: @source_url,
       source_url: @source_url,
       docs: docs(),
       dialyzer: [

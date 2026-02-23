@@ -10,13 +10,15 @@ defmodule ExRatatui.Widgets.Gauge do
     * `:block` - optional `%ExRatatui.Widgets.Block{}` container
     * `:gauge_style` - `%ExRatatui.Style{}` for the filled portion
 
-  ## Example
+  ## Examples
 
-      %Gauge{
+      iex> %ExRatatui.Widgets.Gauge{ratio: 0.75, label: "75%"}
+      %ExRatatui.Widgets.Gauge{
         ratio: 0.75,
         label: "75%",
-        gauge_style: %Style{fg: :green},
-        block: %Block{title: "Progress", borders: [:all]}
+        style: %ExRatatui.Style{},
+        block: nil,
+        gauge_style: %ExRatatui.Style{}
       }
   """
 

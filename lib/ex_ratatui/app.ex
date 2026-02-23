@@ -40,6 +40,17 @@ defmodule ExRatatui.App do
       children = [{MyTUI, []}]
       Supervisor.start_link(children, strategy: :one_for_one)
 
+  ## Options
+
+  Options are passed through `start_link/1` and forwarded to `mount/1`:
+
+    * `:name` - process registration name (defaults to the module name,
+      pass `nil` to skip registration)
+    * `:poll_interval` - event polling interval in milliseconds (default: `16`,
+      which gives ~60fps). The poll runs on the BEAM's DirtyIo scheduler so it
+      never blocks normal processes. Lower values increase responsiveness but
+      use more CPU; higher values reduce CPU but add input latency.
+
   ## Callbacks
 
     * `mount/1` — Called once on startup with options. Return `{:ok, initial_state}`.

@@ -1,6 +1,8 @@
 defmodule ExRatatui.FrameTest do
   use ExUnit.Case, async: true
 
+  doctest ExRatatui.Frame
+
   alias ExRatatui.Frame
 
   test "frame struct has width and height fields" do

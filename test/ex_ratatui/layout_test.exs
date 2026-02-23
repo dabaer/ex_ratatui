@@ -1,6 +1,9 @@
 defmodule ExRatatui.LayoutTest do
   use ExUnit.Case, async: true
 
+  doctest ExRatatui.Layout
+  doctest ExRatatui.Layout.Rect
+
   alias ExRatatui.Layout
   alias ExRatatui.Layout.Rect
 

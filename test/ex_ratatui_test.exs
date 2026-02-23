@@ -1,6 +1,14 @@
 defmodule ExRatatuiTest do
   use ExUnit.Case, async: true
 
+  doctest ExRatatui
+  doctest ExRatatui.Style
+  doctest ExRatatui.Widgets.Paragraph
+  doctest ExRatatui.Widgets.Block
+  doctest ExRatatui.Widgets.List
+  doctest ExRatatui.Widgets.Table
+  doctest ExRatatui.Widgets.Gauge
+
   test "widget structs can be created" do
     paragraph = %ExRatatui.Widgets.Paragraph{text: "Hello"}
     assert paragraph.text == "Hello"

@@ -107,9 +107,18 @@ defmodule ExRatatui do
   Uses ratatui's TestBackend — no real terminal needed. Useful for testing
   rendering output without a TTY. Returns a terminal reference.
 
-      terminal = ExRatatui.init_test_terminal(80, 24)
-      ExRatatui.draw(terminal, [{widget, rect}])
-      content = ExRatatui.get_buffer_content(terminal)
+  ## Examples
+
+      iex> terminal = ExRatatui.init_test_terminal(40, 10)
+      iex> is_reference(terminal)
+      true
+
+      iex> terminal = ExRatatui.init_test_terminal(40, 10)
+      iex> alias ExRatatui.Widgets.Paragraph
+      iex> alias ExRatatui.Layout.Rect
+      iex> :ok = ExRatatui.draw(terminal, [{%Paragraph{text: "Hello!"}, %Rect{x: 0, y: 0, width: 40, height: 10}}])
+      iex> ExRatatui.get_buffer_content(terminal) =~ "Hello!"
+      true
   """
   @spec init_test_terminal(non_neg_integer(), non_neg_integer()) ::
           terminal_ref() | {:error, term()}

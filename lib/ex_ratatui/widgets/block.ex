@@ -14,13 +14,26 @@ defmodule ExRatatui.Widgets.Block do
     * `:style` - `%ExRatatui.Style{}` for the inner area
     * `:padding` - `{left, right, top, bottom}` inner padding
 
-  ## Example
+  ## Examples
 
-      %Block{
+      iex> %ExRatatui.Widgets.Block{title: "My Panel", borders: [:all], border_type: :rounded}
+      %ExRatatui.Widgets.Block{
         title: "My Panel",
         borders: [:all],
+        border_style: %ExRatatui.Style{},
         border_type: :rounded,
-        border_style: %Style{fg: :cyan}
+        style: %ExRatatui.Style{},
+        padding: {0, 0, 0, 0}
+      }
+
+      iex> %ExRatatui.Widgets.Block{}
+      %ExRatatui.Widgets.Block{
+        title: nil,
+        borders: [],
+        border_style: %ExRatatui.Style{},
+        border_type: :plain,
+        style: %ExRatatui.Style{},
+        padding: {0, 0, 0, 0}
       }
   """
 

@@ -8,6 +8,14 @@ defmodule ExRatatui.Layout.Rect do
     * `:y` - top row (0-based)
     * `:width` - width in cells
     * `:height` - height in cells
+
+  ## Examples
+
+      iex> %ExRatatui.Layout.Rect{x: 0, y: 0, width: 80, height: 24}
+      %ExRatatui.Layout.Rect{x: 0, y: 0, width: 80, height: 24}
+
+      iex> %ExRatatui.Layout.Rect{}
+      %ExRatatui.Layout.Rect{x: 0, y: 0, width: 0, height: 0}
   """
 
   @type t :: %__MODULE__{

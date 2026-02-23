@@ -44,10 +44,25 @@ defmodule ExRatatui.Layout do
 
   Returns a list of `%Rect{}` structs or `{:error, reason}` on failure.
 
-      [top, bottom] = ExRatatui.Layout.split(area, :vertical, [
-        {:percentage, 50},
-        {:percentage, 50}
-      ])
+  ## Examples
+
+      iex> alias ExRatatui.Layout
+      iex> alias ExRatatui.Layout.Rect
+      iex> area = %Rect{x: 0, y: 0, width: 80, height: 24}
+      iex> [top, bottom] = Layout.split(area, :vertical, [{:percentage, 50}, {:percentage, 50}])
+      iex> top
+      %Rect{x: 0, y: 0, width: 80, height: 12}
+      iex> bottom
+      %Rect{x: 0, y: 12, width: 80, height: 12}
+
+      iex> alias ExRatatui.Layout
+      iex> alias ExRatatui.Layout.Rect
+      iex> area = %Rect{x: 0, y: 0, width: 100, height: 1}
+      iex> [left, right] = Layout.split(area, :horizontal, [{:length, 20}, {:min, 0}])
+      iex> left
+      %Rect{x: 0, y: 0, width: 20, height: 1}
+      iex> right
+      %Rect{x: 20, y: 0, width: 80, height: 1}
   """
   @spec split(Rect.t(), direction(), [constraint()]) :: [Rect.t()] | {:error, term()}
   def split(%Rect{} = area, direction, constraints)
